@@ -1,0 +1,132 @@
+---
+import Icon from './ui/Icon.astro';
+---
+
+<article class="feature" id="no-shows" data-reveal>
+  <div class="feature__copy">
+    <p class="feature__tag">No-Show Protection</p>
+    <h2 class="h2">Protect Your Time, Automatically</h2>
+    <p class="lede">Set a cancellation policy and take payment when clients book. They agree to your terms before they confirm, and Barber-OS applies them for you.</p>
+    <ul class="checks">
+      <li><Icon name="check" />Your notice window and late-cancel charge</li>
+      <li><Icon name="check" />Prepay or save a card at booking</li>
+      <li><Icon name="check" />Clients agree before they can book</li>
+    </ul>
+  </div>
+
+  <div class="feature__stage ns" data-noshow>
+    <div class="app ns__set">
+      <p class="ns__title"><Icon name="settings" size={15} /> Cancellation policy</p>
+      <label class="ns__row">
+        <span>Notice required</span>
+        <select data-hours>
+          <option value="12">12 hours</option>
+          <option value="24" selected>24 hours</option>
+          <option value="48">48 hours</option>
+        </select>
+      </label>
+      <label class="ns__row">
+        <span>Charge</span>
+        <select data-pct>
+          <option value="25">25% of service</option>
+          <option value="50" selected>50% of service</option>
+          <option value="100">100% of service</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="app ns__client" role="group" aria-label="What the client sees when booking">
+      <p class="ns__label">Payment</p>
+      <div class="ns__pay" role="radiogroup" aria-label="Payment method">
+        <button type="button" role="radio" aria-checked="false" data-method="person"><i></i>Pay in person</button>
+        <button type="button" role="radio" aria-checked="true" data-method="card"><i></i>Credit or Debit Card <Icon name="card" size={16} /></button>
+      </div>
+      <div class="ns__policy">
+        <b>Cancellation policy</b>
+        <p data-policy></p>
+      </div>
+      <label class="ns__agree">
+        <input type="checkbox" data-agree />
+        <span class="ns__box" aria-hidden="true"><Icon name="check" size={12} /></span>
+        I agree to the cancellation policy
+      </label>
+      <p class="ns__err" data-err role="alert"></p>
+      <button type="button" class="app-btn ns__cta" data-continue>Continue to payment</button>
+      <p class="ns__powered">Powered by <img src="/img/bos-logo-ink.png" alt="Barber-OS" width="1200" height="135" /></p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .ns { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 16px; align-items: start; }
+  .ns__set { padding: 16px; display: grid; gap: 12px; }
+  .ns__title { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13.5px; }
+  .ns__row { display: grid; gap: 6px; font-size: 12px; color: #4b5257; }
+  .ns__row select {
+    height: 36px; padding: 0 10px; border-radius: 6px; border: 0; background: #fff;
+    box-shadow: inset 0 0 0 1px #d6d8da; font-size: 13px; color: #111;
+  }
+  .ns__client { padding: 18px; display: grid; gap: 12px; }
+  .ns__label { font-weight: 600; font-size: 14px; }
+  .ns__pay { display: grid; gap: 6px; }
+  .ns__pay button {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0; border-radius: 6px;
+    background: #fff; box-shadow: inset 0 0 0 1px #e3e5e7; font-size: 13px; text-align: left;
+  }
+  .ns__pay button svg { margin-left: auto; color: #2f7de1; }
+  .ns__pay i { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #b9bec2; flex: none; }
+  .ns__pay button[aria-checked='true'] i { box-shadow: inset 0 0 0 5px #111; }
+  .ns__policy { background: var(--warn-bg); color: var(--warn-ink); padding: 12px 14px; border-radius: 6px; font-size: 12.5px; line-height: 1.5; display: grid; gap: 4px; }
+  .ns__policy :global(mark) { background: none; color: #3d3000; font-weight: 700; }
+  .ns__agree { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+  .ns__agree input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .ns__box { width: 18px; height: 18px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px #9aa0a5; display: grid; place-items: center; color: transparent; transition: background-color 0.15s; }
+  .ns__agree input:checked + .ns__box { background: #111; box-shadow: none; color: #fff; }
+  .ns__agree input:focus-visible + .ns__box { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .ns__err { color: var(--danger); font-size: 12px; min-height: 0; }
+  .ns__err:empty { display: none; }
+  .ns__cta { height: 40px; }
+  .ns__cta.is-done { background: var(--ok); }
+  .ns__powered { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 10.5px; color: #8a9196; letter-spacing: 0.04em; text-transform: uppercase; }
+  .ns__powered img { height: 9px; width: auto; opacity: 0.55; filter: grayscale(1); }
+
+  @media (max-width: 680px) { .ns { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-noshow]')!;
+  const hours = root.querySelector<HTMLSelectElement>('[data-hours]')!;
+  const pct = root.querySelector<HTMLSelectElement>('[data-pct]')!;
+  const policy = root.querySelector<HTMLElement>('[data-policy]')!;
+  const agree = root.querySelector<HTMLInputElement>('[data-agree]')!;
+  const err = root.querySelector<HTMLElement>('[data-err]')!;
+  const cta = root.querySelector<HTMLButtonElement>('[data-continue]')!;
+
+  const reset = () => {
+    cta.classList.remove('is-done');
+    cta.textContent = 'Continue to payment';
+  };
+  const render = () => {
+    policy.innerHTML = `We require a minimum of <mark>${hours.value} hours' notice</mark> for any appointment cancellations or rescheduling. Later changes and no-shows will incur a <mark>${pct.value}% charge</mark> of the service price. Thank you for your understanding!`;
+    reset();
+  };
+  hours.addEventListener('change', render);
+  pct.addEventListener('change', render);
+  root.querySelectorAll<HTMLButtonElement>('[data-method]').forEach((b) =>
+    b.addEventListener('click', () => {
+      root.querySelectorAll('[data-method]').forEach((o) => o.setAttribute('aria-checked', String(o === b)));
+      cta.textContent = b.dataset.method === 'card' ? 'Continue to payment' : 'Confirm booking';
+      cta.classList.remove('is-done');
+    })
+  );
+  agree.addEventListener('change', () => { if (agree.checked) err.textContent = ''; reset(); });
+  cta.addEventListener('click', () => {
+    if (!agree.checked) {
+      err.textContent = 'Please agree to the cancellation policy to continue.';
+      return;
+    }
+    cta.classList.add('is-done');
+    cta.textContent = 'Booking protected';
+  });
+  render();
+</script>

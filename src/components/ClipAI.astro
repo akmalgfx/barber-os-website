@@ -1,0 +1,173 @@
+---
+import Icon from './ui/Icon.astro';
+---
+
+<article class="feature feature--flip" id="clip-ai" data-reveal>
+  <div class="feature__copy">
+    <p class="feature__tag">Clip AI <span class="new">New</span></p>
+    <h2 class="h2">Your Front Desk, On 24/7</h2>
+    <p class="lede">Clip AI books and reschedules for your clients by text and answers their questions, so you never miss a client call. For you, it's a business coach that knows your numbers.</p>
+    <ul class="checks">
+      <li><Icon name="check" />Shop assistant for clients, day and night</li>
+      <li><Icon name="check" />Business coach for owners</li>
+      <li><Icon name="check" />Answers from your real shop data</li>
+    </ul>
+  </div>
+
+  <div class="feature__stage">
+    <div class="clip" data-clip>
+      <div class="clip__tabs" role="tablist" aria-label="Clip AI mode">
+        <span class="clip__pill" aria-hidden="true" data-pill></span>
+        <button type="button" role="tab" aria-selected="true" data-mode="client">Shop Assistant</button>
+        <button type="button" role="tab" aria-selected="false" data-mode="owner">Business Coach</button>
+      </div>
+      <div class="clip__win app">
+        <div class="clip__head" data-head>
+          <span class="clip__bot"><Icon name="bot" size={20} /></span>
+          <span><b>Clip AI</b><small data-role>Shop Assistant</small></span>
+          <Icon name="close" size={18} class="clip__x" />
+        </div>
+        <ol class="clip__log" data-log aria-live="polite"></ol>
+        <div class="clip__chips" data-chips></div>
+      </div>
+    </div>
+    <p class="demo-note">Sample conversation. Tap a message to send it.</p>
+  </div>
+</article>
+
+<style>
+  .new { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--blue); color: #fff; font-size: 0.75rem; vertical-align: 2px; }
+  .clip { max-width: 440px; margin: 0 auto; display: grid; gap: 12px; }
+  .clip__tabs { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: rgb(0 0 0 / 0.06); }
+  .clip__pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.1); transition: transform 300ms var(--ease-in-out); }
+  .clip__tabs:has([data-mode='owner'][aria-selected='true']) .clip__pill { transform: translateX(100%); }
+  .clip__tabs button { position: relative; z-index: 1; height: 36px; border: 0; border-radius: 999px; background: none; font-size: 14px; font-weight: 500; color: var(--ink-2); transition: background-color 0.2s, color 0.2s, box-shadow 0.2s; }
+  .clip__tabs button[aria-selected='true'] { color: var(--ink); }
+  .clip__win { display: grid; grid-template-rows: auto 1fr auto; height: 420px; }
+  .clip__head {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #fff;
+    background: #1957f2; transition: background-color 0.35s;
+  }
+  .clip__head.is-owner { background: #0b1d4a; }
+  .clip__head b { display: block; font-size: 16px; font-weight: 600; line-height: 1.15; }
+  .clip__head small { font-size: 12.5px; opacity: 0.85; }
+  .clip__bot { width: 38px; height: 38px; border-radius: 50%; background: rgb(255 255 255 / 0.18); display: grid; place-items: center; flex: none; }
+  .clip__head :global(.clip__x) { margin-left: auto; opacity: 0.85; }
+  .clip__log { list-style: none; margin: 0; padding: 14px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; overscroll-behavior: contain; }
+  .clip__log :global(li) { max-width: 85%; padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.45; animation: msg 0.35s var(--ease) both; }
+  .clip__log :global(.bot) { align-self: flex-start; background: #efefef; }
+  .clip__log :global(.me) { align-self: flex-end; background: #ddf4fb; }
+  .clip__log :global(.typing) { display: flex; gap: 4px; padding: 13px 14px; }
+  .clip__log :global(.typing i) { width: 6px; height: 6px; border-radius: 50%; background: #9aa0a5; animation: dot 1s infinite; }
+  .clip__log :global(.typing i:nth-child(2)) { animation-delay: 0.15s; }
+  .clip__log :global(.typing i:nth-child(3)) { animation-delay: 0.3s; }
+  .clip__log :global(.slots) { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-self: stretch; max-width: none; padding: 0 4px; background: none; }
+  .clip__log :global(.slots button) { height: 32px; border: 0; border-radius: 6px; background: #fff; box-shadow: inset 0 0 0 1px #9aa0a5; font-size: 12.5px; }
+  @media (hover: hover) and (pointer: fine) { .clip__log :global(.slots button:hover:not(:disabled)) { box-shadow: inset 0 0 0 1.5px #111; } }
+  .clip__log :global(.slots button:disabled) { opacity: 0.5; }
+  .clip__log :global(.cta) { align-self: stretch; max-width: none; padding: 0; background: none; }
+  .clip__log :global(.cta span) { display: block; text-align: center; padding: 9px; border-radius: 999px; background: #1957f2; color: #fff; font-weight: 500; }
+  .clip__log :global(a) { color: #1957f2; }
+  @keyframes msg { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes dot { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  .clip__chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 14px 14px; border-top: 1px solid #eceeef; }
+  .clip__chips :global(button) { border: 0; padding: 7px 12px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px #d6d8da; font-size: 12.5px; font-weight: 500; }
+  @media (hover: hover) and (pointer: fine) { .clip__chips :global(button:hover:not(:disabled)) { box-shadow: inset 0 0 0 1px #111; } }
+  .clip__chips :global(button:disabled) { opacity: 0.4; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .clip__log :global(li) { animation: none; } }
+</style>
+
+<script>
+  type Turn = { ask: string; reply: string; slots?: string[]; after?: string };
+  const modes: Record<'client' | 'owner', { role: string; hello: string; turns: Turn[] }> = {
+    client: {
+      role: 'Shop Assistant',
+      hello: "Hi! I'm Clip, your shop assistant. How can I help you?",
+      turns: [
+        { ask: 'I want to reschedule to Tuesday', reply: 'Sure! To what time?', slots: ['08:00 AM', '09:00 AM', '09:30 AM', '01:30 PM', '02:30 PM', '04:00 PM'], after: 'Perfect! Your appointment is confirmed for Tuesday at {slot}.' },
+        { ask: 'Do you take walk-ins?', reply: 'Yes, when there’s a gap. Tyrone has one at 11:15 today. Want me to hold it?' },
+        { ask: 'How much is a fade?', reply: 'A fade cut is $35 and takes about 30 minutes.' },
+      ],
+    },
+    owner: {
+      role: 'Business Coach',
+      hello: "Hi! I'm Clip, your business coach. How can I help you today?",
+      turns: [
+        { ask: 'How much revenue did we generate last week?', reply: 'The total sales revenue was $4,287. Service revenue was $3,142 and product revenue was $1,145, with a total sales count of 63.<br><br>Reports can be found <a href="#" onclick="return false">here</a>.' },
+        { ask: 'Who was my busiest barber?', reply: 'Tyrone, with 41 appointments last week. Zahra had 36 and the highest add-on rate.' },
+        { ask: 'What’s running low?', reply: 'Hanz De Fuko Claymation (3 left) and Agiva Styling Powder (4 left). Want me to draft a stock order?' },
+      ],
+    },
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-clip]')!;
+  const log = root.querySelector<HTMLOListElement>('[data-log]')!;
+  const chips = root.querySelector<HTMLElement>('[data-chips]')!;
+  const head = root.querySelector<HTMLElement>('[data-head]')!;
+  const role = root.querySelector<HTMLElement>('[data-role]')!;
+  const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-mode]')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let token = 0;
+  let busy = false;
+
+  const add = (cls: string, html: string) => {
+    const li = document.createElement('li');
+    li.className = cls;
+    li.innerHTML = html;
+    log.append(li);
+    log.scrollTop = log.scrollHeight;
+    return li;
+  };
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+  async function say(html: string, t: number) {
+    const d = add('bot typing', '<i></i><i></i><i></i>');
+    await wait(700);
+    d.remove();
+    return t === token ? add('bot', html) : null;
+  }
+
+  async function run(turn: Turn, btn: HTMLButtonElement) {
+    if (busy) return;
+    busy = true;
+    const t = token;
+    btn.disabled = true;
+    add('me', turn.ask);
+    const li = await say(turn.reply, t);
+    if (li && turn.slots) {
+      const row = add('slots', '');
+      turn.slots.forEach((s) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = s;
+        b.addEventListener('click', async () => {
+          row.querySelectorAll('button').forEach((x) => ((x as HTMLButtonElement).disabled = true));
+          add('me', s);
+          const done = await say(turn.after!.replace('{slot}', s), t);
+          if (done) add('cta', '<span>View appointment details</span>');
+        }, { once: true });
+        row.append(b);
+      });
+    }
+    busy = false;
+  }
+
+  function setMode(m: 'client' | 'owner') {
+    token++;
+    busy = false;
+    tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+    head.classList.toggle('is-owner', m === 'owner');
+    role.textContent = modes[m].role;
+    log.innerHTML = '';
+    add('bot', modes[m].hello);
+    chips.innerHTML = '';
+    modes[m].turns.forEach((turn) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = turn.ask;
+      b.addEventListener('click', () => run(turn, b));
+      chips.append(b);
+    });
+  }
+  tabs.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode as 'client' | 'owner')));
+  setMode('client');
+</script>

@@ -1,0 +1,535 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/ui/Icon.astro';
+import { LINKS } from '../data/site';
+import { terminals, countertop, allHardware, money } from '../data/hardware';
+
+const specRows = terminals[0].specs.map(([label]) => label);
+const why = [
+  { title: 'One System', text: 'Appointments, point of sale and payment processing run in Barber-OS together, so nothing is typed twice.',
+    img: '/img/hardware/tablet-kit-2.webp', w: 1000, h: 1000, alt: 'Countertop tablet kit showing the Barber-OS calendar, with the receipt printer in its base.' },
+  { title: 'Fast Checkouts', text: 'Straightforward software that takes a client from chair to paid in a few taps.',
+    img: '/img/hardware/pos-screen.webp', w: 1600, h: 1143, alt: 'The Barber-OS POS checkout screen with services, products and a running total.' },
+  { title: 'Smooth Payments', text: 'Dependable terminals built for chip, swipe and contactless, on every one.',
+    img: '/img/hardware/s1f2-tap.webp', w: 1000, h: 1000, alt: 'A card tapping the S1F2 terminal to pay $99.00.' },
+];
+---
+
+<Base
+  title="POS Hardware | Barber-OS"
+  description="Card terminals from $299, a countertop tablet kit, cash drawer, receipt printer and barcode scanner, all built to run with Barber-OS."
+>
+  <Nav />
+  <main id="main">
+    <section class="page-hero hx">
+      <div class="page-hero__field" aria-hidden="true"><i></i><i></i></div>
+      <div class="wrap">
+        <div class="section-head section-head--center">
+          <span class="pill"><Icon name="pos" size={15} /> Hardware</span>
+          <h1 class="h1">POS Hardware</h1>
+          <p class="lede">Connected tools, effortless sales. Card terminals, a countertop tablet kit, cash drawer, receipt printer and barcode scanner, all running on Barber-OS.</p>
+        </div>
+        <div class="hx__panel glass">
+          <figure class="hx__fig">
+            <img src="/img/hardware/system.webp" width="2000" height="918" fetchpriority="high" decoding="async"
+              alt="The full Barber-OS counter: tablet on its printer stand, S1F2 card terminal, barcode scanner and cash drawer." />
+          </figure>
+          <ul class="hx__facts">
+            <li><b class="num">From $299</b><span>Card terminals, chip, swipe and tap</span></li>
+            <li><b class="num">$79</b><span>Cash drawer, printer or scanner</span></li>
+            <li><b class="num">2.2% + $0.20</b><span>Per card payment, in person or online</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section why" aria-labelledby="why-h">
+      <div class="why__field" aria-hidden="true"><i></i><i></i></div>
+      <div class="wrap">
+        <div class="section-head section-head--center" data-reveal>
+          <h2 class="h2" id="why-h">One System, Start To Finish</h2>
+          <p class="lede">Stop juggling separate systems for appointments, point of sale and payment processing.</p>
+        </div>
+        <div class="why__grid">
+          {why.map((w, i) => (
+            <article class:list={['why__tile', 'glass', `why__tile--${i}`]} data-reveal>
+              <div class="why__copy">
+                <h3 class="h3">{w.title}</h3>
+                <p>{w.text}</p>
+              </div>
+              <div class="why__stage"><img src={w.img} width={w.w} height={w.h} alt={w.alt} loading="lazy" decoding="async" /></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section terms" id="terminals" aria-labelledby="terminals-h">
+      <div class="wrap">
+        <div class="section-head section-head--center" data-reveal>
+          <h2 class="h2" id="terminals-h">Card Terminals</h2>
+          <p class="lede">All three take chip, swipe and contactless payments through Barber-OS. Pick the size that suits your counter, or put one at every chair.</p>
+        </div>
+        <div class="terms__grid" style={`--rows:${specRows.length + 5}`}>
+          {terminals.map((t, i) => (
+            <article class="term" style={`--d:${i * 80}ms`} data-reveal aria-labelledby={`p-${t.id}`}>
+              <div class="term__img"><img src={t.imgs[0].src} alt={t.imgs[0].alt} width="1000" height="1000" loading="lazy" decoding="async" /></div>
+              <div class="term__title">
+                <h3 class="h3" id={`p-${t.id}`}>{t.name}</h3>
+                {t.tag && <span class="term__tag">{t.tag}</span>}
+              </div>
+              <p class="term__text">{t.text}</p>
+              <div class="term__buy">
+                <span class="term__price num">{money(t.price)}</span>
+                <button type="button" class="add" data-add={t.id} aria-pressed="false">
+                  <span class="add__on">Add To Setup</span><span class="add__off"><Icon name="check" size={16} /> Added</span>
+                </button>
+              </div>
+              {t.specs.map(([label, value]) => (
+                <div class="term__spec"><span>{label}</span><b class:list={{ 'is-none': value === '—' }}>{value === '—' ? 'Not listed' : value}</b></div>
+              ))}
+              <div class="term__spec term__spec--box"><span>In the box</span><b>{t.inBox.join(', ')}</b></div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section ct" id="countertop" aria-labelledby="countertop-h">
+      <div class="wrap">
+        <div class="section-head section-head--center" data-reveal>
+          <h2 class="h2" id="countertop-h">Build Out Your Counter</h2>
+          <p class="lede">Turn the front desk into a full station. Each piece connects to the Barber-OS POS and can be added at any time.</p>
+        </div>
+
+        <div class="ct__tabs" role="tablist" aria-label="Countertop hardware" data-reveal>
+          {countertop.map((p, i) => (
+            <button type="button" role="tab" class="ct__tab" id={`tab-${p.id}`} aria-controls={`panel-${p.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={i}>
+              <img src={p.imgs[0].src} alt="" width="1000" height="1000" loading="lazy" decoding="async" />
+              <span><b>{p.name}</b><small class="num">{money(p.price)}</small></span>
+            </button>
+          ))}
+        </div>
+
+        {countertop.map((p, i) => (
+          <div class:list={['ct__panel', { 'is-on': i === 0 }]} role="tabpanel" id={`panel-${p.id}`} aria-labelledby={`tab-${p.id}`} data-panel={i} data-reveal>
+            <div class="ct__stage">
+              <div class="ct__big">
+                {p.imgs.map((im, j) => (
+                  <img class:list={{ 'is-on': j === 0 }} src={im.src} alt={im.alt} width="1000" height="1000" loading="lazy" decoding="async" data-shot={j} />
+                ))}
+              </div>
+              {p.imgs.length > 1 && (
+                <div class="ct__thumbs">
+                  {p.imgs.map((im, j) => (
+                    <button type="button" aria-pressed={j === 0 ? 'true' : 'false'} aria-label={`View image ${j + 1} of ${p.imgs.length}: ${im.alt}`} data-thumb={j}>
+                      <img src={im.src} alt="" width="1000" height="1000" loading="lazy" decoding="async" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div class="ct__info">
+              <h3 class="ct__name">{p.name}</h3>
+              <p class="ct__price num">{money(p.price)}</p>
+              <p class="ct__text">{p.text}</p>
+              <button type="button" class="add add--lg" data-add={p.id} aria-pressed="false">
+                <span class="add__on">Add To Setup</span><span class="add__off"><Icon name="check" size={16} /> Added</span>
+              </button>
+              <dl class="ct__specs">
+                <div><dt>In the box</dt><dd>{p.inBox.join(', ')}</dd></div>
+                {p.specs.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+              </dl>
+              {p.note && <p class="ct__note">{p.note}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="section setup" id="setup" aria-labelledby="setup-h">
+      <div class="wrap setup__in">
+        <div class="setup__copy" data-reveal>
+          <h2 class="h2" id="setup-h">Your Setup</h2>
+          <p class="lede">Add a terminal and any countertop pieces, and send the list to our sales team. They'll confirm the quote and help you get set up.</p>
+        </div>
+        <div class="setup__card" data-reveal data-setup>
+          <p class="setup__empty" data-empty>Nothing added yet. Start with a card terminal, then add what your counter needs.</p>
+          <ul class="setup__list" data-list hidden>
+            {allHardware.map((p) => (
+              <li data-line={p.id} data-price={p.price} hidden>
+                <img src={p.imgs[0].src} alt="" width="1000" height="1000" loading="lazy" decoding="async" />
+                <span class="setup__name"><b>{p.name}</b><small class="num">{money(p.price)} each</small></span>
+                <span class="qty">
+                  <button type="button" data-step="-1" aria-label={`One fewer ${p.name}`}><Icon name="minus" size={16} /></button>
+                  <output class="num" data-qty aria-label={`${p.name} quantity`}>0</output>
+                  <button type="button" data-step="1" aria-label={`One more ${p.name}`}><Icon name="plus" size={16} /></button>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div class="setup__more">
+            <p class="setup__more-h" data-more-h>Add hardware</p>
+            <div class="setup__chips">
+              {allHardware.map((p) => (
+                <button type="button" class="chip" data-add={p.id} data-chip aria-pressed="false">
+                  <Icon name="plus" size={16} /><span>{p.name}</span><small class="num">{money(p.price)}</small>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div class="setup__foot">
+            <p class="setup__total"><span>Total</span><b class="num" data-total>$0</b></p>
+            <a class="btn" href="/contact-us" data-quote aria-disabled="true">Request A Quote</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section any" aria-labelledby="any-h">
+      <div class="wrap any__in">
+        <div class="any__copy" data-reveal>
+          <h2 class="h2" id="any-h">Use The POS On Any Device</h2>
+          <p class="lede">The Barber-OS POS app runs on a laptop, an iPad, an Android tablet or a phone. Start with what you own and add hardware when the shop needs it.</p>
+          <a class="link" href="/app-download">Download the POS app <Icon name="arrowRight" size={16} /></a>
+        </div>
+        <figure class="any__fig" data-reveal>
+          <img src="/img/hardware/any-device.webp" width="1800" height="1286" loading="lazy" decoding="async"
+            alt="The Barber-OS POS on a laptop, a tablet and a phone." />
+        </figure>
+      </div>
+    </section>
+
+    <section class="cta-hw">
+      <div class="wrap">
+        <div class="cta-hw__box" data-reveal>
+          <h2 class="h2">Not Sure What You Need?</h2>
+          <p class="lede">We're happy to answer your questions, walk you through the options and help you choose the right setup for your barbershop.</p>
+          <div class="cta-hw__acts">
+            <a class="btn" href="/contact-us">Contact Sales</a>
+            <a class="btn btn--ghost cta-hw__ghost" href={LINKS.bookDemo} rel="noopener">Book A Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="bar" data-bar hidden>
+    <span class="bar__sum"><b class="num" data-bar-count>0 items</b><span class="num" data-bar-total>$0</span></span>
+    <a class="btn btn--sm" href="#setup">Review Setup</a>
+  </div>
+  <Footer />
+</Base>
+
+<style>
+  /* ---------- Hero: the shared inner-page hero, with the full counter on a glass panel ---------- */
+  .hx__panel { margin-top: clamp(40px, 5vw, 64px); padding: clamp(12px, 2vw, 20px); animation: page-rise 800ms 200ms var(--ease-out) both; }
+  /* The render's own ground is #f7f7f7, so it sits in an inset stage of the same tone. */
+  .hx__fig { margin: 0; border-radius: 20px; background: #f7f7f7; overflow: hidden; }
+  .hx__fig img { width: 100%; height: auto; }
+  .hx__facts { list-style: none; margin: clamp(12px, 2vw, 20px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 20px); }
+  .hx__facts li { display: grid; gap: 4px; padding: 18px 22px; border-radius: 18px; background: rgb(255 255 255 / 0.7); }
+  .hx__facts b { font-size: clamp(1.375rem, 2.2vw, 1.75rem); font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; }
+  .hx__facts span { color: var(--ink-2); font-size: 0.9375rem; }
+
+  /* ---------- Why ---------- */
+  /* Colour behind the glass, as on the other glass sections. */
+  .why { position: relative; isolation: isolate; }
+  .why__field { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .why__field i { position: absolute; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, var(--c), transparent); }
+  .why__field i:nth-child(1) { --c: rgb(18 109 251 / 0.16); left: -14%; top: 20%; }
+  .why__field i:nth-child(2) { --c: rgb(30 187 236 / 0.18); right: -14%; top: 34%; }
+  .why__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-rows: auto auto; gap: 20px; }
+  /* Glass card; every picture sits in the same inset stage as the homepage feature cards. */
+  .why__tile { display: grid; grid-template-rows: auto 1fr; gap: 12px; padding: 12px; }
+  .why__tile--0 { grid-row: span 2; }
+  .why__copy { display: grid; gap: 8px; padding: clamp(14px, 2vw, 24px) clamp(14px, 2vw, 24px) 0; max-width: 30em; }
+  .why__copy p { color: var(--ink-2); }
+  .why__stage {
+    border-radius: 20px; overflow: hidden; display: grid; place-items: center; padding: clamp(12px, 2vw, 24px);
+    background: rgb(246 247 249 / 0.7); box-shadow: inset 0 0 0 1px rgb(10 10 10 / 0.04), inset 0 1px 2px rgb(10 10 10 / 0.03);
+  }
+  /* The photos are on white, so multiply lets the stage tone show through as their ground. */
+  .why__stage img { width: 100%; height: auto; mix-blend-mode: multiply; }
+  .why__tile--0 .why__stage img { width: 84%; }
+  .why__tile--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: none; align-items: stretch; }
+  .why__tile--2 .why__copy { padding-bottom: clamp(14px, 2vw, 24px); align-self: center; }
+  /* This photo is cropped at its bottom edge, so it runs to the stage's bottom edge. */
+  .why__tile--2 .why__stage { padding: 12px 12px 0; align-items: end; }
+  .why__tile--2 .why__stage img { width: 86%; }
+
+  /* ---------- Terminals: columns share rows, so specs line up like a comparison table ---------- */
+  .terms { background: var(--surface); }
+  .terms__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(var(--rows), auto); column-gap: clamp(16px, 2vw, 28px); }
+  .term { grid-row: span var(--rows); display: grid; grid-template-rows: subgrid; row-gap: 0; }
+  :global(.js) .term[data-reveal] { transition-delay: var(--d); }
+  .term__img { aspect-ratio: 1; border-radius: 24px; background: var(--bg); overflow: hidden; margin-bottom: 24px; }
+  .term__img img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transition: transform 600ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .term:hover .term__img img { transform: scale(1.03); } }
+  .term__title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .term__title .h3 { font-size: 1.5rem; letter-spacing: -0.025em; }
+  .term__tag { font-size: 0.9375rem; font-weight: 600; color: var(--blue); }
+  .term__text { color: var(--ink-2); margin-top: 8px; }
+  .term__buy { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 24px; }
+  .term__price { font-size: 2rem; font-weight: 650; letter-spacing: -0.035em; }
+  .term__spec { display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px; }
+  .term__spec span { font-size: 0.875rem; color: var(--ink-3); }
+  .term__spec b { font-weight: 500; }
+  .term__spec b.is-none { color: var(--ink-3); font-weight: 400; }
+  /* Tone bands instead of rules: every other spec row sits on the ground colour. */
+  .term__spec:nth-of-type(odd) { background: var(--bg); }
+
+  /* ---------- Add buttons ---------- */
+  .add {
+    height: 40px; padding: 0 18px; border: 0; border-radius: 999px; flex: none;
+    background: var(--ink); color: #fff; font-weight: 550; font-size: 0.9375rem; letter-spacing: -0.01em;
+    display: inline-grid; place-items: center; transition: background-color 150ms ease, transform 160ms var(--ease-out);
+  }
+  .add > span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 6px; transition: opacity 180ms ease, transform 220ms var(--ease-out); }
+  .add__off { opacity: 0; transform: translateY(6px); }
+  .add[aria-pressed='true'] { background: var(--blue); }
+  .add[aria-pressed='true'] .add__on { opacity: 0; transform: translateY(-6px); }
+  .add[aria-pressed='true'] .add__off { opacity: 1; transform: none; }
+  .add:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .add:hover { background: #2a2a2e; } .add[aria-pressed='true']:hover { background: var(--blue-hover); } }
+  .add--lg { height: 50px; padding: 0 26px; font-size: 1rem; justify-self: start; }
+
+  /* ---------- Countertop picker ---------- */
+  .ct__tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .ct__tab {
+    display: flex; align-items: center; gap: 12px; text-align: left; padding: 10px 16px 10px 10px;
+    border: 0; border-radius: 20px; background: var(--surface); transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out);
+  }
+  .ct__tab img { width: 56px; height: 56px; border-radius: 12px; background: #fff; flex: none; }
+  .ct__tab b { display: block; font-weight: 600; line-height: 1.25; }
+  .ct__tab small { font-size: 0.9375rem; color: var(--ink-3); }
+  .ct__tab:active { transform: scale(0.98); }
+  .ct__tab[aria-selected='true'] { background: var(--ink); color: #fff; }
+  .ct__tab[aria-selected='true'] small { color: #b8b8be; }
+  @media (hover: hover) and (pointer: fine) { .ct__tab[aria-selected='false']:hover { background: #efeff1; } }
+
+  .ct__panel { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 20px; }
+  :global(.js) .ct__panel:not(.is-on) { display: none; }
+  :global(.js) .ct__panel.is-on.is-in { animation: ct-in 320ms var(--ease-out) both; }
+  @keyframes ct-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .ct__panel + .ct__panel { margin-top: 20px; }
+  :global(.js) .ct__panel + .ct__panel { margin-top: 0; }
+  .ct__stage { position: relative; border-radius: var(--r-lg); background: var(--surface); overflow: hidden; }
+  .ct__big { display: grid; }
+  .ct__big img { grid-area: 1 / 1; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
+  :global(.js) .ct__big img { opacity: 0; transform: scale(0.985); transition: opacity 260ms ease, transform 400ms var(--ease-out); }
+  :global(.js) .ct__big img.is-on { opacity: 1; transform: none; }
+  .ct__thumbs { position: absolute; left: 20px; bottom: 20px; display: flex; gap: 8px; }
+  .ct__thumbs button { width: 64px; height: 64px; padding: 0; border: 0; border-radius: 14px; background: var(--bg); overflow: hidden; transition: transform 160ms var(--ease-out), box-shadow 150ms ease; }
+  .ct__thumbs img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .ct__thumbs button[aria-pressed='true'] { box-shadow: inset 0 0 0 2px var(--ink); }
+  .ct__thumbs button:active { transform: scale(0.95); }
+  .ct__info { display: grid; gap: 14px; align-content: start; padding: clamp(24px, 3vw, 40px); border-radius: var(--r-lg); background: var(--surface); }
+  .ct__name { font-size: clamp(1.75rem, 2.6vw, 2.25rem); font-weight: 650; letter-spacing: -0.035em; line-height: 1.1; }
+  .ct__price { font-size: 1.25rem; font-weight: 600; margin-top: -6px; }
+  .ct__text { color: var(--ink-2); }
+  .ct__specs { margin: 10px 0 0; display: grid; gap: 4px; }
+  .ct__specs div { display: grid; grid-template-columns: 8.5em minmax(0, 1fr); gap: 16px; padding: 10px 14px; border-radius: 12px; }
+  .ct__specs div:nth-child(odd) { background: var(--bg); }
+  .ct__specs dt { font-size: 0.9375rem; color: var(--ink-3); }
+  .ct__specs dd { margin: 0; font-size: 0.9375rem; font-weight: 500; }
+  .ct__note { font-size: 0.9375rem; color: var(--ink-2); }
+
+  /* ---------- Your setup ---------- */
+  .setup { background: var(--surface); }
+  .setup__in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .setup__copy { display: grid; gap: 16px; }
+  .setup__card { display: grid; gap: 8px; padding: clamp(16px, 2.4vw, 28px); border-radius: var(--r-lg); background: var(--bg); }
+  .setup__empty { padding: 28px 12px; color: var(--ink-2); text-align: center; }
+  .setup__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .setup__list li { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 10px 12px 10px 10px; border-radius: 18px; background: var(--surface); }
+  .setup__list li:not([hidden]) { animation: ct-in 280ms var(--ease-out) both; }
+  .setup__list li[hidden] { display: none; }
+  .setup__list img { width: 56px; height: 56px; border-radius: 12px; background: var(--bg); mix-blend-mode: multiply; }
+  .setup__name b { display: block; font-weight: 600; line-height: 1.3; }
+  .setup__name small { font-size: 0.875rem; color: var(--ink-3); }
+  .qty { display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px; background: var(--bg); }
+  .qty button { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface); display: grid; place-items: center; transition: transform 160ms var(--ease-out); }
+  .qty button:active { transform: scale(0.92); }
+  .qty output { min-width: 2ch; text-align: center; font-weight: 600; }
+  .setup__more { display: grid; gap: 10px; padding: 12px 8px 4px; }
+  .setup__more[hidden] { display: none; }
+  .setup__more-h { font-weight: 600; }
+  .setup__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px 0 12px; border: 0; border-radius: 999px;
+    background: var(--surface); font-size: 0.9375rem; font-weight: 550; transition: background-color 150ms ease, transform 160ms var(--ease-out);
+  }
+  .chip svg { color: var(--blue); }
+  .chip small { font-size: 0.9375rem; font-weight: 400; color: var(--ink-3); }
+  .chip[hidden] { display: none; }
+  .chip:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .chip:hover { background: var(--blue-soft); } }
+  .setup__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 16px 8px 4px; }
+  .setup__total { display: flex; align-items: baseline; gap: 12px; }
+  .setup__total span { color: var(--ink-2); }
+  .setup__total b { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 650; letter-spacing: -0.035em; display: inline-block; }
+  .btn[aria-disabled='true'] { opacity: 0.4; pointer-events: none; }
+
+  /* ---------- Any device ---------- */
+  .any__in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .any__copy { display: grid; gap: 18px; justify-items: start; }
+  .any__fig { margin: 0; border-radius: var(--r-lg); background: #f1f1f1; overflow: hidden; }
+  .any__fig img { width: 100%; height: auto; }
+
+  /* ---------- Closing ---------- */
+  .cta-hw { padding: 0 0 clamp(80px, 10vw, 128px); }
+  .cta-hw__box { border-radius: 32px; padding: clamp(48px, 8vw, 96px) var(--gutter); text-align: center; background: var(--ink); color: #fff; display: grid; justify-items: center; gap: 18px; }
+  .cta-hw__box .lede { color: #c9c9ce; max-width: 32em; }
+  .cta-hw__acts { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .cta-hw__ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3); }
+  @media (hover: hover) and (pointer: fine) { .cta-hw__ghost:hover { background: transparent; box-shadow: inset 0 0 0 1px #fff; } }
+
+  /* ---------- Floating setup bar: the one thing that floats, so it carries a shadow ---------- */
+  .bar {
+    position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 40;
+    display: flex; align-items: center; gap: 20px; padding: 8px 8px 8px 22px; border-radius: 999px;
+    background: var(--ink); color: #fff; box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.45);
+    transform: translateX(-50%); opacity: 1;
+    transition: transform 300ms var(--ease-out), opacity 200ms ease, display 300ms allow-discrete;
+  }
+  .bar[hidden] { display: none; opacity: 0; transform: translate(-50%, 16px); }
+  @starting-style { .bar { opacity: 0; transform: translate(-50%, 16px); } }
+  .bar__sum { display: flex; gap: 12px; font-size: 0.9375rem; white-space: nowrap; }
+  .bar__sum span { color: #b8b8be; }
+
+  /* ---------- Reveal stagger ---------- */
+  :global(.js) .why__tile[data-reveal]:nth-child(2) { transition-delay: 80ms; }
+  :global(.js) .why__tile[data-reveal]:nth-child(3) { transition-delay: 160ms; }
+
+  @media (max-width: 960px) {
+    .setup__in, .any__in { grid-template-columns: 1fr; }
+    .why__grid { grid-template-columns: 1fr; }
+    .why__tile--0 { grid-row: auto; }
+    .why__field i { width: 120%; }
+    .why__field i:nth-child(1) { left: -50%; top: 10%; }
+    .why__field i:nth-child(2) { right: -50%; top: 50%; }
+    .terms__grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; row-gap: 56px; }
+    .term { grid-row: auto; grid-template-rows: none; }
+    .ct__tabs { grid-template-columns: 1fr; gap: 6px; }
+    .ct__panel { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .hx__facts { grid-template-columns: 1fr; gap: 8px; }
+    .hx__facts li { padding: 14px 18px; }
+    .why__tile--2 { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .why__tile--2 .why__copy { padding-bottom: 0; }
+    .ct__tab { padding: 8px 16px 8px 8px; border-radius: 16px; }
+    .ct__tab img { width: 44px; height: 44px; border-radius: 10px; }
+    .ct__tab span { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex: 1; }
+    .ct__thumbs { left: 12px; bottom: 12px; }
+    .ct__thumbs button { width: 52px; height: 52px; }
+    .ct__specs div { grid-template-columns: 1fr; gap: 2px; }
+    .setup__list li { grid-template-columns: 48px minmax(0, 1fr); }
+    .setup__list img { width: 48px; height: 48px; }
+    .qty { grid-column: 2; justify-self: start; }
+    .bar { left: 16px; right: 16px; transform: none; justify-content: space-between; }
+    .bar[hidden] { transform: translateY(16px); }
+    @starting-style { .bar { transform: translateY(16px); } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hx__panel { animation: none; }
+    :global(.js) .ct__panel.is-on.is-in, .setup__list li:not([hidden]) { animation: none; }
+    :global(.js) .ct__big img, .bar, .add > span { transition: opacity 200ms ease; transform: none; }
+    .term__img img { transition: none; }
+  }
+</style>
+
+<script>
+  import { tick } from '../data/tick';
+
+  // ---------- Countertop tabs and galleries ----------
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+  const panels = [...document.querySelectorAll<HTMLElement>('[data-panel]')];
+  const select = (i: number, focus = false) => {
+    tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(i === j)); t.tabIndex = i === j ? 0 : -1; });
+    // Hidden panels never reach the reveal observer, so a chosen panel is marked revealed here.
+    panels.forEach((p, j) => { p.classList.toggle('is-on', i === j); if (i === j) p.classList.add('is-in'); });
+    if (focus) tabs[i].focus();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('keydown', (e) => {
+      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (k) { e.preventDefault(); select((i + k + tabs.length) % tabs.length, true); }
+    });
+  });
+  panels.forEach((p) => {
+    const shots = [...p.querySelectorAll<HTMLImageElement>('[data-shot]')];
+    const thumbs = [...p.querySelectorAll<HTMLButtonElement>('[data-thumb]')];
+    thumbs.forEach((b, i) => b.addEventListener('click', () => {
+      shots.forEach((s, j) => s.classList.toggle('is-on', i === j));
+      thumbs.forEach((t, j) => t.setAttribute('aria-pressed', String(i === j)));
+    }));
+  });
+
+  // ---------- Your setup ----------
+  const KEY = 'bos-hw-setup';
+  let qty: Record<string, number> = {};
+  try { qty = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch {}
+
+  const lines = [...document.querySelectorAll<HTMLLIElement>('[data-line]')];
+  const list = document.querySelector<HTMLElement>('[data-list]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const totalEl = document.querySelector<HTMLElement>('[data-total]')!;
+  const quote = document.querySelector<HTMLAnchorElement>('[data-quote]')!;
+  const bar = document.querySelector<HTMLElement>('[data-bar]')!;
+  const barCount = document.querySelector<HTMLElement>('[data-bar-count]')!;
+  const barTotal = document.querySelector<HTMLElement>('[data-bar-total]')!;
+  const setupSec = document.getElementById('setup')!;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-chip]')];
+  const more = document.querySelector<HTMLElement>('.setup__more')!;
+  const moreH = document.querySelector<HTMLElement>('[data-more-h]')!;
+  const money = (n: number) => `$${n.toLocaleString('en-US')}`;
+  let setupVisible = false;
+
+  const render = () => {
+    let total = 0, count = 0;
+    const parts: string[] = [];
+    lines.forEach((li) => {
+      const id = li.dataset.line!, n = qty[id] || 0;
+      li.hidden = n === 0;
+      li.querySelector('[data-qty]')!.textContent = String(n);
+      if (n) {
+        total += n * Number(li.dataset.price); count += n;
+        parts.push(`${n} × ${li.querySelector('b')!.textContent}`);
+      }
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-add]').forEach((b) => b.setAttribute('aria-pressed', String(!!qty[b.dataset.add!])));
+    list.hidden = count === 0; empty.hidden = count > 0;
+    // Chips offer only what is not in the setup yet.
+    let left = 0;
+    chips.forEach((c) => { c.hidden = !!qty[c.dataset.add!]; if (!c.hidden) left++; });
+    more.hidden = left === 0;
+    moreH.textContent = count ? 'Add more' : 'Add hardware';
+    if (totalEl.textContent !== money(total)) { totalEl.textContent = money(total); tick(totalEl); }
+    barCount.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+    barTotal.textContent = money(total);
+    quote.setAttribute('aria-disabled', String(count === 0));
+    quote.href = count ? `/contact-us?setup=${encodeURIComponent(`${parts.join(', ')} (${money(total)})`)}` : '/contact-us';
+    bar.hidden = count === 0 || setupVisible;
+    try { localStorage.setItem(KEY, JSON.stringify(qty)); } catch {}
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-add]').forEach((b) => b.addEventListener('click', () => {
+    const id = b.dataset.add!;
+    if (qty[id]) delete qty[id]; else qty[id] = 1;
+    render();
+  }));
+  lines.forEach((li) => li.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((b) => b.addEventListener('click', () => {
+    const id = li.dataset.line!, n = Math.max(0, Math.min(20, (qty[id] || 0) + Number(b.dataset.step)));
+    if (n) qty[id] = n; else delete qty[id];
+    render();
+  })));
+
+  new IntersectionObserver(([e]) => { setupVisible = e.isIntersecting; render(); }, { threshold: 0.15 }).observe(setupSec);
+  render();
+</script>

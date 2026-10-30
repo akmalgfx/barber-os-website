@@ -1,0 +1,182 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import PlanCards from '../components/PlanCards.astro';
+import Icon from '../components/ui/Icon.astro';
+import { FORM_ENDPOINTS, LINKS } from '../data/site';
+
+const options = [
+  { id: 'setup', n: 'Option 1', label: 'Quick-Setup', icon: 'automation' },
+  { id: 'info', n: 'Option 2', label: 'Receive Info Package', icon: 'blast' },
+  { id: 'demo', n: 'Option 3', label: 'Book A Demo', icon: 'calendar' },
+];
+---
+
+<Base title="Get Started | Barber-OS" description="Start a 7-day free trial, get our info package, or book a demo with the Barber-OS team.">
+  <Nav />
+  <main id="main">
+    <section class="page-hero">
+      <div class="page-hero__field" aria-hidden="true"><i></i><i></i></div>
+      <div class="wrap">
+        <div class="section-head section-head--center">
+          <span class="pill"><Icon name="arrowRight" size={15} /> Get Started</span>
+          <h1 class="h1">Choose How You Want To Begin</h1>
+          <p class="lede">Start a free trial on your own, have our team send you everything you need, or walk through it together in a demo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="gs" data-gs>
+      <div class="wrap">
+        <div class="gs__tabs glass" role="tablist" aria-label="Ways to get started">
+          <span class="gs__pill" aria-hidden="true" data-gs-pill></span>
+          {options.map((o, i) => (
+            <button type="button" role="tab" id={`tab-${o.id}`} aria-controls={`panel-${o.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={o.id}>
+              <small>{o.n}</small>
+              <span><Icon name={o.icon} size={18} />{o.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <div class="gs__panel" role="tabpanel" id="panel-setup" aria-labelledby="tab-setup" data-panel="setup">
+          <div class="section-head section-head--center gs__head">
+            <span class="pill pill--ok"><Icon name="shield" size={15} /> 100% Risk-Free</span>
+            <h2 class="h2">Experience Barber-OS For Free. Cancel Anytime</h2>
+            <p class="lede">Select any plan and get a full week to see how much time and money you can save. No commitment required.</p>
+          </div>
+          <PlanCards />
+        </div>
+
+        <div class="gs__panel" role="tabpanel" id="panel-info" aria-labelledby="tab-info" data-panel="info" hidden>
+          <div class="gs__split">
+            <div class="section-head gs__head gs__head--left">
+              <h2 class="h2">Receive Info Package</h2>
+              <p class="lede">Get our free info package sent to you by our sales team. See how Barber-OS helps barbershops like yours save time and boost revenue.</p>
+              <ul class="checks">
+                <li><Icon name="check" />Pricing, features and hardware in one place</li>
+                <li><Icon name="check" />How migration and training work</li>
+                <li><Icon name="check" />A follow-up from a real person, not a bot</li>
+              </ul>
+            </div>
+            <div class="glass gs__form">
+              <form class="form" data-form data-endpoint={FORM_ENDPOINTS.infoPackage} novalidate>
+                <div class="form__row">
+                  <label class="field"><span class="field__label">Name <i>*</i></span>
+                    <input name="name" type="text" autocomplete="name" placeholder="John Doe" required /><span class="field__err"></span></label>
+                  <label class="field"><span class="field__label">Shop Name <i>*</i></span>
+                    <input name="shop" type="text" autocomplete="organization" placeholder="Clipper & Fade" required /><span class="field__err"></span></label>
+                </div>
+                <label class="field"><span class="field__label">Email <i>*</i></span>
+                  <input name="email" type="email" autocomplete="email" inputmode="email" placeholder="john@barber-os.com" required /><span class="field__err"></span></label>
+                <label class="field"><span class="field__label">Phone <i>*</i></span>
+                  <input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="833-123-1234" pattern="[\d\s()+.\-]{10,}" required /><span class="field__err"></span></label>
+                <input class="sr-only" type="text" name="company_site" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                <div class="form__foot">
+                  <button class="btn" type="submit">Send Me The Package</button>
+                  <p class="form__status" data-status role="status" aria-live="polite"></p>
+                </div>
+              </form>
+              <div class="form__done" data-done hidden tabindex="-1">
+                <span class="form__done-ico"><Icon name="check" size={24} /></span>
+                <h3 class="h3">It's on its way</h3>
+                <p class="small">Our sales team will send your info package shortly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gs__panel" role="tabpanel" id="panel-demo" aria-labelledby="tab-demo" data-panel="demo" hidden>
+          <div class="gs__demo glass">
+            <span class="gs__demo-ico"><Icon name="calendar" size={28} /></span>
+            <h2 class="h2">Book A Demo</h2>
+            <p class="lede">Schedule a full demo with our team at your convenience. We'll walk through your shop's setup and answer every question.</p>
+            <a class="btn" href={LINKS.bookDemo} rel="noopener">Book Demo <Icon name="arrowRight" size={18} /></a>
+            <p class="small">Opens our booking calendar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .gs { padding: 16px 0 clamp(80px, 10vw, 128px); }
+  .gs__tabs {
+    position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+    max-width: 760px; margin: 0 auto clamp(40px, 6vw, 64px); padding: 6px; border-radius: 22px;
+  }
+  .gs__pill {
+    position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc((100% - 20px) / 3); border-radius: 16px;
+    background: #fff; box-shadow: 0 0 0 1px rgb(10 10 10 / 0.06), 0 6px 16px -8px rgb(10 20 40 / 0.25);
+    transition: transform 320ms var(--ease-in-out);
+  }
+  .gs__tabs button {
+    position: relative; z-index: 1; display: grid; gap: 2px; justify-items: center; padding: 12px 8px;
+    border: 0; border-radius: 16px; background: none; color: var(--ink-3); transition: color 200ms ease;
+  }
+  .gs__tabs button small { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em; }
+  .gs__tabs button span { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.975rem; }
+  .gs__tabs button[aria-selected='true'] { color: var(--ink); }
+  .gs__tabs button[aria-selected='true'] small { color: var(--blue); }
+  .gs__tabs button:active { transform: scale(0.98); }
+
+  .gs__panel { animation: panel-in 380ms var(--ease-out) both; }
+  .gs__panel[hidden] { display: none; }
+  @keyframes panel-in { from { opacity: 0; transform: translateY(10px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+  .gs__head { margin-bottom: clamp(32px, 4vw, 48px); }
+  .pill--ok { color: #0f7a46; background: #def7e8; box-shadow: inset 0 0 0 1px #b6ebcb; }
+
+  .gs__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .gs__head--left { margin: 0; }
+  .gs__form { padding: clamp(24px, 4vw, 40px); }
+
+  .gs__demo { max-width: 720px; margin: 0 auto; padding: clamp(36px, 6vw, 64px); text-align: center; display: grid; justify-items: center; gap: 16px; }
+  .gs__demo-ico { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; color: #fff; background: var(--blue); box-shadow: 0 12px 24px -10px rgb(18 109 251 / 0.6); }
+
+  @media (max-width: 860px) {
+    .gs__split { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .gs__tabs button span { font-size: 0.8125rem; flex-direction: column; gap: 4px; text-align: center; }
+    .gs__tabs button small { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gs__panel { animation: none; }
+    .gs__pill { transition: none; }
+  }
+</style>
+
+<script>
+  import { mountForms } from '../data/forms';
+  mountForms();
+
+  const root = document.querySelector<HTMLElement>('[data-gs]')!;
+  const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+  const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+  const pill = root.querySelector<HTMLElement>('[data-gs-pill]')!;
+
+  const select = (id: string, focus = false) => {
+    const i = Math.max(0, tabs.findIndex((t) => t.dataset.tab === id));
+    tabs.forEach((t, j) => {
+      t.setAttribute('aria-selected', String(i === j));
+      t.tabIndex = i === j ? 0 : -1;
+    });
+    panels.forEach((p) => (p.hidden = p.dataset.panel !== tabs[i].dataset.tab));
+    pill.style.transform = `translateX(calc(${i * 100}% + ${i * 4}px))`;
+    if (focus) tabs[i].focus();
+    history.replaceState(null, '', i === 0 ? location.pathname : `#${tabs[i].dataset.tab}`);
+  };
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t.dataset.tab!));
+    t.addEventListener('keydown', (e) => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) select(tabs[(i + d + tabs.length) % tabs.length].dataset.tab!, true);
+    });
+  });
+  // Deep links: /get-started#info or #demo open that option.
+  const fromHash = location.hash.slice(1);
+  if (fromHash) select(fromHash);
+</script>

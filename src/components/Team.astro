@@ -1,0 +1,142 @@
+---
+import Icon from './ui/Icon.astro';
+
+const days = [
+  { d: 3, n: 'Monday' }, { d: 4, n: 'Tuesday' }, { d: 5, n: 'Wednesday' }, { d: 6, n: 'Thursday', today: true },
+  { d: 7, n: 'Friday' }, { d: 8, n: 'Saturday' }, { d: 9, n: 'Sunday' },
+];
+const staff = [
+  { name: 'Michael Davis', hue: 200, shifts: [1, 1, 0, 1, 1, 1, 0] },
+  { name: 'Charles Williams', hue: 30, shifts: [0, 1, 1, 1, 1, 1, 0] },
+  { name: 'Tyrone Anderson', hue: 150, shifts: [1, 0, 1, 0, 1, 1, 0] },
+  { name: 'Zahra Khalid', hue: 330, shifts: [0, 0, 0, 0, 0, 0, 0] },
+];
+---
+
+<article class="feature feature--wide" id="team" data-reveal>
+  <div class="feature__copy team__copy">
+    <div>
+      <p class="feature__tag">Employee Management</p>
+      <h2 class="h2">Empowered Barbers. Thriving Shop</h2>
+    </div>
+    <p class="lede">Equip your team with fair tip splitting, transparent payroll and clear scheduling, all in one place. Set permissions and personal pricing for every barber.</p>
+  </div>
+
+  <div class="feature__stage">
+    <div class="sch app" data-sched role="group" aria-label="Sample shift schedule. Click a day to add or remove a shift.">
+      <div class="sch__top">
+        <p class="sch__title">Shift Schedule</p>
+        <span class="sch__gear"><Icon name="settings" size={16} /></span>
+        <button type="button" class="app-btn" data-fill>Add <Icon name="chevronDown" size={14} /></button>
+      </div>
+      <div class="sch__bar">
+        <span class="sch__shop">The Grooming Gallery <Icon name="chevronDown" size={14} /></span>
+        <span class="sch__week"><b>This week</b><Icon name="chevronLeft" size={16} /><span class="sch__range">3 Feb – 9 Feb 2025 <Icon name="calendar" size={14} /></span><Icon name="chevronRight" size={16} /></span>
+      </div>
+      <div class="sch__scroll">
+        <table class="sch__table">
+          <thead>
+            <tr>
+              <th class="sch__emp">Employee <Icon name="pencil" size={13} /></th>
+              {days.map((d) => <th><span class:list={['sch__d', { today: d.today }]}>{d.d}</span> {d.n}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {staff.map((p) => (
+              <tr data-person>
+                <th class="sch__emp" scope="row">
+                  <span class="av" style={`--h:${p.hue}`}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
+                  <span><b>{p.name}</b><small data-hours>0h</small></span>
+                </th>
+                {p.shifts.map((on) => (
+                  <td>
+                    <button type="button" class:list={['sch__cell', { on }]} data-cell aria-pressed={on ? 'true' : 'false'}>
+                      <span class="sch__shift">9:00 – 5:00</span>
+                      <span class="sch__none">No shift <Icon name="plusCircle" size={16} /></span>
+                    </button>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="sch__foot"><span>Team hours this week</span><b data-total>0h</b></p>
+    </div>
+    <p class="demo-note">Sample team. Click any day to add or remove a shift.</p>
+  </div>
+</article>
+
+<style>
+  .team__copy { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 72px; align-items: end; }
+  @media (max-width: 960px) { .team__copy { grid-template-columns: 1fr; } }
+  .sch { padding: 18px 18px 6px; }
+  .sch__top { display: flex; align-items: center; gap: 10px; }
+  .sch__title { font-size: 19px; font-weight: 700; letter-spacing: -0.015em; margin-right: auto; }
+  .sch__gear { width: 34px; height: 34px; border-radius: 6px; box-shadow: inset 0 0 0 1px #d6d8da; display: grid; place-items: center; }
+  .sch__bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 14px 0 12px; flex-wrap: wrap; }
+  .sch__shop { display: inline-flex; align-items: center; gap: 24px; height: 34px; padding: 0 10px; border-radius: 6px; box-shadow: inset 0 0 0 1px #d6d8da; }
+  .sch__week { display: inline-flex; align-items: center; gap: 10px; }
+  .sch__week b { color: #0b7fae; font-weight: 600; }
+  .sch__range { display: inline-flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px; border-radius: 6px; box-shadow: inset 0 0 0 1px #d6d8da; }
+  .sch__scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+  .sch__table { width: 100%; min-width: 820px; border-collapse: collapse; font-size: 12px; }
+  .sch__table thead th { padding: 10px 6px; font-weight: 600; text-align: center; white-space: nowrap; }
+  .sch__d { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-size: 13px; font-weight: 700; }
+  .sch__d.today { background: #d7f2ef; }
+  .sch__table tbody th, .sch__table td { border: 1px solid #e3e5e7; }
+  .sch__emp { text-align: left !important; width: 190px; }
+  thead .sch__emp { display: flex; align-items: center; gap: 6px; }
+  tbody .sch__emp { display: flex; align-items: center; gap: 10px; padding: 8px 10px; font-weight: 400; border-left: 1px solid #e3e5e7; }
+  .sch__emp b { display: block; font-weight: 600; font-size: 12px; }
+  .sch__emp small { color: #6b7176; font-size: 11px; }
+  .av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; background: hsl(var(--h) 70% 93%); color: hsl(var(--h) 45% 32%); font-size: 11px; font-weight: 700; }
+  .sch__table td { padding: 4px; }
+  .sch__cell {
+    width: 100%; height: 38px; border: 0; border-radius: 5px; background: none; font-size: 11.5px; color: #6b7176;
+    transition: background-color 0.25s;
+  }
+  @media (hover: hover) and (pointer: fine) { .sch__cell:hover { background: #f4f6f7; } }
+  .sch__none { display: inline-flex; align-items: center; gap: 6px; }
+  .sch__shift { display: none; font-weight: 600; color: #0d4a5c; }
+  .sch__cell { transition: background-color 200ms ease, transform 160ms var(--ease-out); }
+  .sch__cell:active { transform: scale(0.96); }
+  .sch__cell.on { background: var(--appt); }
+  .sch__cell.on .sch__shift { animation: shift-in 260ms var(--ease-out); }
+  @keyframes shift-in { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+  .sch__cell.on .sch__shift { display: inline; }
+  .sch__cell.on .sch__none { display: none; }
+  .sch__foot { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 4px; font-size: 13px; color: #4b5257; }
+  .sch__foot b { display: inline-block; color: #111; font-variant-numeric: tabular-nums; }
+</style>
+
+<script>
+  import { tick } from '../data/tick';
+  const root = document.querySelector<HTMLElement>('[data-sched]')!;
+  const people = [...root.querySelectorAll<HTMLElement>('[data-person]')];
+  const update = () => {
+    let total = 0;
+    people.forEach((p) => {
+      const h = p.querySelectorAll('.sch__cell.on').length * 8;
+      total += h;
+      p.querySelector('[data-hours]')!.textContent = `${h}h`;
+    });
+    const t = root.querySelector('[data-total]')!;
+    if (t.textContent !== `${total}h`) { t.textContent = `${total}h`; tick(t); }
+  };
+  root.querySelectorAll<HTMLButtonElement>('[data-cell]').forEach((c) =>
+    c.addEventListener('click', () => {
+      const on = !c.classList.contains('on');
+      c.classList.toggle('on', on);
+      c.setAttribute('aria-pressed', String(on));
+      update();
+    })
+  );
+  // "Add" fills the first empty weekday for whoever has the fewest hours.
+  root.querySelector('[data-fill]')!.addEventListener('click', () => {
+    const p = [...people].sort((a, b) => a.querySelectorAll('.on').length - b.querySelectorAll('.on').length)[0];
+    const cell = [...p.querySelectorAll<HTMLButtonElement>('[data-cell]')].slice(0, 6).find((c) => !c.classList.contains('on'));
+    cell?.click();
+  });
+  update();
+</script>

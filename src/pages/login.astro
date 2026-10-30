@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/ui/Icon.astro';
+import AppCard from '../components/AppCard.astro';
+import { LINKS } from '../data/site';
+
+const logins = [
+  {
+    name: 'Admin', role: 'For Your Business', accent: '18 109 251', cta: 'Admin Login', href: LINKS.adminLogin,
+    text: 'Command your business. Bookings, staff, payments, stock and reports, from any browser.',
+    img: '/img/apps/admin-phone.webp', w: 700, h: 1436, kind: 'phone' as const, mark: '/img/apps/mark-admin.png',
+  },
+  {
+    name: 'POS', role: 'For Your Barbershop', accent: '19 163 74', cta: 'POS Login', href: LINKS.posLogin,
+    text: 'Operate the shop floor. Check clients in, ring up services and products, and take payment.',
+    img: '/img/apps/pos-tablet.webp', w: 1200, h: 770, kind: 'tablet' as const, mark: '/img/apps/mark-pos.png',
+  },
+];
+---
+
+<Base title="Login | Barber-OS" description="Log in to the Barber-OS Admin to run your business, or the POS to run your shop floor.">
+  <Nav />
+  <main id="main">
+    <section class="page-hero">
+      <div class="page-hero__field" aria-hidden="true"><i></i><i></i></div>
+      <div class="wrap">
+        <div class="section-head section-head--center">
+          <span class="pill"><Icon name="user" size={15} /> Welcome Back</span>
+          <h1 class="h1">Login</h1>
+          <p class="lede">Command your business with the <b>Admin</b>, and operate your barbershop with the <b>POS</b>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-sec">
+      <div class="login-sec__field" aria-hidden="true"><i></i><i></i></div>
+      <div class="wrap logins">
+        {logins.map((l, i) => (
+          <AppCard name={l.name} role={l.role} accent={l.accent} text={l.text} img={l.img} w={l.w} h={l.h} kind={l.kind} index={i} mark={l.mark}>
+            <div class="acts" style={`--accent:${l.accent}`}>
+              <a class="go" href={l.href} rel="noopener">{l.cta} <Icon name="arrowRight" size={18} /></a>
+              <a class="go go--glass" href="/app-download">Get the App</a>
+            </div>
+          </AppCard>
+        ))}
+      </div>
+      <p class="wrap login__help small">New to Barber-OS? <a class="link" href="/get-started">Get started</a> · Trouble signing in? <a class="link" href={LINKS.support} rel="noopener">Visit the support portal</a></p>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .login-sec { position: relative; isolation: isolate; padding: 24px 0 clamp(80px, 10vw, 128px); }
+  /* Colour behind the glass, one glow per login. */
+  .login-sec__field { position: absolute; inset: -80px 0 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .login-sec__field i { position: absolute; top: 8%; width: 52%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, var(--c), transparent); }
+  .login-sec__field i:nth-child(1) { --c: rgb(18 109 251 / 0.22); left: 0; }
+  .login-sec__field i:nth-child(2) { --c: rgb(19 163 74 / 0.18); right: 0; top: 16%; }
+
+  .logins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: calc(920px + var(--gutter) * 2); }
+
+  /* A solid accent login beside a glass secondary, matching the store buttons. */
+  .acts { display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; margin-top: 2px; }
+  .go {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 14px;
+    border-radius: 14px; text-decoration: none; font-weight: 650; font-size: 0.9375rem;
+    color: #fff; background: rgb(var(--accent));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 8px 18px -10px rgb(var(--accent) / 0.8);
+    transition: transform 160ms var(--ease-out), filter 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+  }
+  .go :global(svg) { transition: transform 200ms var(--ease-out); }
+  .go--glass {
+    color: var(--ink); background: rgb(255 255 255 / 0.55);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.9), 0 0 0 1px rgb(10 10 10 / 0.07), 0 4px 10px -6px rgb(10 20 40 / 0.2);
+  }
+  .go:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) {
+    .go:hover { filter: brightness(0.93); }
+    .go:hover :global(svg) { transform: translateX(2px); }
+    .go--glass:hover { filter: none; background: rgb(255 255 255 / 0.85); box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px rgb(10 10 10 / 0.12), 0 6px 14px -6px rgb(10 20 40 / 0.25); }
+  }
+
+  .login__help { text-align: center; margin-top: 32px; }
+
+  @media (max-width: 860px) {
+    .logins { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    .login-sec__field i { width: 90%; }
+    .login-sec__field i:nth-child(1) { left: -30%; top: 0; }
+    .login-sec__field i:nth-child(2) { right: -30%; top: 50%; }
+  }
+  @media (max-width: 420px) {
+    .acts { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .go--glass { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
+</style>

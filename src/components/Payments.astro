@@ -1,0 +1,215 @@
+---
+import Icon from './ui/Icon.astro';
+
+const tiles = [
+  { name: 'Gentleman’s Haircut', price: 35, kind: 'service' },
+  { name: 'Beard Trim', price: 20, kind: 'service' },
+  { name: 'Buzz Cut', price: 35, kind: 'service' },
+  { name: 'Skin Fade', price: 45, kind: 'service' },
+  { name: 'Hanz De Fuko Claymation', price: 25, kind: 'product' },
+  { name: 'Agiva Beard Oil', price: 25, kind: 'product' },
+];
+const tabs = ['Quick Sale', 'Appointments', 'Products', 'Services', 'Gift cards'];
+---
+
+<article class="feature feature--flip" id="payments" data-reveal>
+  <div class="feature__copy">
+    <p class="feature__tag">POS & Integrated Payments</p>
+    <h2 class="h2">Smooth, Simple, Lightning-Fast Checkout</h2>
+    <p class="lede">Process payments in seconds with fewer clicks, faster tips and no client wait time. Online and in-person payments in one place.</p>
+    <ul class="checks">
+      <li><Icon name="check" />Tap, chip, swipe or card on file</li>
+      <li><Icon name="check" />Fair tip splitting and cash tracking</li>
+      <li><Icon name="check" />Starts at 2.2% + $0.20 per payment</li>
+    </ul>
+  </div>
+
+  <div class="feature__stage">
+    <div class="pos app" data-pos role="group" aria-label="Sample point of sale. Tap tiles to build a sale, then check out.">
+      <div class="app__bar pos__bar"><span>Clip & Fade Barber Co.</span><Icon name="wifi" size={15} /></div>
+      <div class="pos__body">
+        <div class="pos__left">
+          <div class="pos__tabs">{tabs.map((t, i) => <span class:list={{ on: i === 0 }}>{t}</span>)}</div>
+          <div class="pos__tiles">
+            {tiles.map((t) => (
+              <button type="button" class:list={['pos__tile', `pos__tile--${t.kind}`]} data-tile={t.name} data-price={t.price} data-kind={t.kind}>
+                <Icon name={t.kind === 'service' ? 'scissors' : 'box'} size={15} />
+                <b>{t.name}</b><small>${t.price.toFixed(2)}</small>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div class="pos__cart">
+          <div class="pos__client"><span class="pos__ico"><Icon name="user" size={15} /></span><span><b>Choose a client</b><small>Leave empty for walk-in</small></span><Icon name="chevronRight" size={14} /></div>
+          <ul class="pos__lines" data-lines aria-live="polite"></ul>
+          <p class="pos__empty" data-empty>Tap a tile to add it to the sale.</p>
+          <dl class="pos__sum">
+            <div><dt>Subtotal</dt><dd data-sub>$0.00</dd></div>
+            <div><dt>Tax</dt><dd data-tax>$0.00</dd></div>
+            <div class="pos__total"><dt>Total</dt><dd data-total>$0.00</dd></div>
+          </dl>
+          <div class="pos__acts">
+            <button type="button" class="app-btn app-btn--line" data-clear>Clear All</button>
+            <button type="button" class="app-btn pos__go" data-checkout disabled>Checkout</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tap" data-tap hidden>
+        <button type="button" class="tap__x" data-cancel aria-label="Cancel payment"><Icon name="close" size={18} /></button>
+        <div class="tap__hold" data-hold>
+          <Icon name="contactless" size={40} />
+          <p>Hold here to pay</p>
+        </div>
+        <div class="tap__card">
+          <span class="tap__shop"><Icon name="bag" size={20} /></span>
+          <p>Clip & Fade Barber Co.</p>
+          <b data-tap-amt>$0.00</b>
+        </div>
+        <button type="button" class="tap__btn" data-pay>Tap card</button>
+        <p class="tap__fee" data-fee></p>
+      </div>
+    </div>
+    <p class="demo-note">Sample shop and prices. Tax shown at 5%.</p>
+  </div>
+</article>
+
+<style>
+  .pos { position: relative; }
+  .pos__bar { background: var(--app-pos); font-weight: 600; font-size: 12.5px; }
+  .pos__body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); min-height: 420px; }
+  .pos__left { border-right: 1px solid #eceeef; min-width: 0; }
+  .pos__tabs { display: flex; gap: 2px; border-bottom: 1px solid #eceeef; overflow: hidden; padding: 0 6px; }
+  .pos__tabs span { padding: 11px 9px; font-size: 12px; color: #6b7176; white-space: nowrap; }
+  .pos__tabs span.on { color: #111; font-weight: 600; box-shadow: inset 0 -2px 0 #111; }
+  .pos__tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px; }
+  .pos__tile {
+    position: relative; text-align: left; display: grid; gap: 3px;
+    padding: 10px 10px 10px 16px; border: 0; border-radius: 6px; background: #fff;
+    box-shadow: inset 0 0 0 1px #e3e5e7; overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.15s var(--ease);
+  }
+  .pos__tile::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+  .pos__tile--service::before { background: var(--tile-service); }
+  .pos__tile--product::before { background: var(--tile-product); }
+  @media (hover: hover) and (pointer: fine) {
+    .pos__tile:hover { box-shadow: inset 0 0 0 1px #9aa0a5; }
+  }
+  .pos__tile:active { transform: scale(0.97); }
+  .pos__tile b { font-weight: 500; font-size: 13px; line-height: 1.25; }
+  .pos__tile small { color: #6b7176; font-size: 11.5px; }
+  .pos__cart { display: flex; flex-direction: column; padding: 12px; gap: 10px; min-width: 0; }
+  .pos__client { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; box-shadow: inset 0 0 0 1px #e3e5e7; }
+  .pos__client b { display: block; font-weight: 500; font-size: 12.5px; }
+  .pos__client small { font-size: 11px; color: #6b7176; }
+  .pos__client > svg { margin-left: auto; color: #6b7176; }
+  .pos__ico { width: 30px; height: 30px; border-radius: 50%; background: #eef6f9; display: grid; place-items: center; color: var(--app); flex: none; }
+  .pos__lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .pos__lines :global(li) { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; animation: line-in 0.3s var(--ease) both; }
+  .pos__lines :global(small) { display: block; color: #6b7176; font-size: 11px; }
+  @keyframes line-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .pos__empty { color: #8a9196; font-size: 12px; }
+  .pos__empty[hidden] { display: none; }
+  .pos__sum { margin: auto 0 0; display: grid; gap: 4px; font-size: 12px; color: #4b5257; }
+  .pos__sum div { display: flex; justify-content: space-between; }
+  .pos__sum dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .pos__total dd { display: inline-block; }
+  .pos__total { padding-top: 8px; margin-top: 4px; border-top: 1px solid #eceeef; color: #111; font-size: 15px; font-weight: 700; }
+  .pos__acts { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+  .pos__go { background: var(--app-pos); }
+
+  .tap {
+    position: absolute; inset: 0; z-index: 3;
+    background: linear-gradient(180deg, #0b0d12 0%, #2b2d31 100%); color: #fff;
+    display: grid; justify-items: center; align-content: center; gap: 18px; padding: 24px;
+    /* Fades in and back out along the same path, and reverses cleanly if cancelled mid-fade. */
+    transition: opacity 0.3s var(--ease-out), display 0.3s allow-discrete;
+  }
+  .tap[hidden] { display: none; opacity: 0; transition-duration: 0.2s; }
+  @starting-style { .tap:not([hidden]) { opacity: 0; } }
+  .tap__x { position: absolute; left: 16px; bottom: 16px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgb(255 255 255 / 0.12); color: #fff; display: grid; place-items: center; }
+  .tap__hold { display: grid; justify-items: center; gap: 6px; font-size: 15px; font-weight: 500; }
+  .tap__card {
+    width: min(280px, 100%); padding: 20px; border-radius: 22px; text-align: center;
+    background: #1b1c1f; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+    display: grid; justify-items: center; gap: 6px;
+  }
+  .tap__shop { width: 44px; height: 44px; border-radius: 50%; background: #f5b400; color: #fff; display: grid; place-items: center; }
+  .tap__card p { font-size: 13px; color: #d8d8d8; }
+  .tap__card b { font-size: 40px; font-weight: 650; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tap__btn { height: 40px; padding: 0 22px; border-radius: 999px; border: 0; background: #fff; color: #111; font-weight: 600; font-size: 13px; }
+  .tap__fee { font-size: 11.5px; color: #a8abb0; min-height: 1em; }
+  .tap.is-paid .tap__hold { color: #4fd1a1; }
+
+  @media (max-width: 560px) {
+    .pos__body { grid-template-columns: 1fr; }
+    .pos__left { border-right: 0; border-bottom: 1px solid #eceeef; }
+  }
+</style>
+
+<script>
+  import { tick } from '../data/tick';
+  const root = document.querySelector<HTMLElement>('[data-pos]')!;
+  const lines = root.querySelector<HTMLUListElement>('[data-lines]')!;
+  const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+  const go = root.querySelector<HTMLButtonElement>('[data-checkout]')!;
+  const tap = root.querySelector<HTMLElement>('[data-tap]')!;
+  const hold = root.querySelector<HTMLElement>('[data-hold]')!;
+  const payBtn = root.querySelector<HTMLButtonElement>('[data-pay]')!;
+  const fee = root.querySelector<HTMLElement>('[data-fee]')!;
+  const money = (n: number) => `$${n.toFixed(2)}`;
+  let cart: { name: string; price: number; kind: string }[] = [];
+  let total = 0;
+
+  const render = () => {
+    lines.innerHTML = cart
+      .map((c) => `<li><span>${c.name}<small>${c.kind === 'service' ? 'with Tyrone Anderson' : 'Retail'}</small></span><span>${money(c.price)}</span></li>`)
+      .join('');
+    const sub = cart.reduce((a, c) => a + c.price, 0);
+    const tax = Math.round(sub * 0.05 * 100) / 100;
+    total = sub + tax;
+    root.querySelector('[data-sub]')!.textContent = money(sub);
+    root.querySelector('[data-tax]')!.textContent = money(tax);
+    const totalEl = root.querySelector('[data-total]')!;
+    if (totalEl.textContent !== money(total)) { totalEl.textContent = money(total); tick(totalEl); }
+    empty.hidden = cart.length > 0;
+    go.disabled = cart.length === 0;
+  };
+
+  root.querySelectorAll<HTMLButtonElement>('[data-tile]').forEach((b) =>
+    b.addEventListener('click', () => {
+      if (cart.length >= 5) cart.shift();
+      cart.push({ name: b.dataset.tile!, price: Number(b.dataset.price), kind: b.dataset.kind! });
+      render();
+    })
+  );
+  root.querySelector('[data-clear]')!.addEventListener('click', () => { cart = []; render(); });
+  go.addEventListener('click', () => {
+    root.querySelector('[data-tap-amt]')!.textContent = money(total);
+    tap.classList.remove('is-paid');
+    hold.querySelector('p')!.textContent = 'Hold here to pay';
+    payBtn.textContent = 'Tap card';
+    payBtn.disabled = false;
+    fee.textContent = '';
+    tap.hidden = false;
+    payBtn.focus({ preventScroll: true });
+  });
+  payBtn.addEventListener('click', () => {
+    if (tap.classList.contains('is-paid')) {
+      tap.hidden = true; cart = []; render(); go.focus({ preventScroll: true });
+      return;
+    }
+    payBtn.disabled = true;
+    hold.querySelector('p')!.textContent = 'Reading card…';
+    setTimeout(() => {
+      tap.classList.add('is-paid');
+      hold.querySelector('p')!.textContent = 'Approved';
+      const f = Math.round((total * 0.022 + 0.2) * 100) / 100;
+      fee.textContent = `Processing ${money(f)} at 2.2% + $0.20`;
+      payBtn.textContent = 'Done';
+      payBtn.disabled = false;
+    }, 900);
+  });
+  root.querySelector('[data-cancel]')!.addEventListener('click', () => { tap.hidden = true; go.focus({ preventScroll: true }); });
+  render();
+</script>

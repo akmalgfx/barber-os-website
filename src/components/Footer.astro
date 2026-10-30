@@ -1,0 +1,65 @@
+---
+import { GET_STARTED, LINKS } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <div class="foot__brand">
+      <img src="/img/bos-logo-ink.png" alt="Barber-OS" width="1200" height="135" loading="lazy" />
+      <p>B.O.S, the Barber Operating System. Your all-in-one barbershop software.</p>
+    </div>
+    <nav class="foot__cols" aria-label="Footer">
+      <div>
+        <p>Company</p>
+        <a href={LINKS.about}>About</a>
+        <a href={LINKS.careers} rel="noopener">Careers</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/#faq">FAQ</a>
+      </div>
+      <div>
+        <p>Product</p>
+        <a href="/#booking">Online booking</a>
+        <a href="/#payments">POS & payments</a>
+        <a href="/#clip-ai">Clip AI</a>
+        <a href="/pos-hardware">Hardware</a>
+      </div>
+      <div>
+        <p>Expert help</p>
+        <a href="/contact-us">Contact us</a>
+        <a href={LINKS.instagram} rel="noopener">Instagram</a>
+        <a href="/app-download">App Download</a>
+        <a href={LINKS.support} rel="noopener">Support portal</a>
+        <a href={GET_STARTED}>Get Started</a>
+      </div>
+    </nav>
+    <div class="foot__base">
+      <span>All Rights Reserved © {year} BARBER-OS</span>
+      <span><a href={LINKS.privacy}>Privacy Policy</a><a href={LINKS.terms}>Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot { padding: 64px 0 32px; border-top: 1px solid var(--line); }
+  .foot__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 48px; }
+  .foot__brand { display: grid; gap: 14px; align-content: start; }
+  .foot__brand img { width: 150px; height: auto; }
+  .foot__brand p { color: var(--ink-3); font-size: 0.9375rem; max-width: 22em; }
+  .foot__cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .foot__cols div { display: grid; gap: 10px; align-content: start; }
+  .foot__cols p { font-weight: 600; font-size: 0.9375rem; margin-bottom: 4px; }
+  .foot__cols a { color: var(--ink-2); text-decoration: none; font-size: 0.9375rem; width: fit-content; }
+  @media (hover: hover) and (pointer: fine) { .foot__cols a:hover { color: var(--ink); } }
+  .foot__base {
+    grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding-top: 24px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 0.875rem;
+  }
+  .foot__base span:last-child { display: flex; gap: 20px; }
+  .foot__base a { color: var(--ink-3); text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) { .foot__base a:hover { color: var(--ink); } }
+  @media (max-width: 800px) {
+    .foot__in { grid-template-columns: 1fr; }
+    .foot__cols { grid-template-columns: 1fr 1fr; }
+  }
+</style>

@@ -1,0 +1,399 @@
+---
+import Icon from './ui/Icon.astro';
+
+// Recreated from the live booking page (booking.barber-os.com/landing). Sample data.
+const cats = ['All Services', 'Haircuts', 'Bundles', 'Shaving'];
+const services = [
+  { name: 'Classic Haircut', mins: 35, price: 30, note: 'Traditional haircut with styling.', cat: 'Haircuts' },
+  { name: 'Skin Fade', mins: 45, price: 40, note: 'Fade down to the skin, finished by hand.', cat: 'Haircuts' },
+  { name: 'Combo', mins: 50, price: 45, was: 50, note: 'Haircut & Beard Trim', cat: 'Bundles' },
+  { name: 'Hot Towel Shave', mins: 45, price: 25, note: 'Straight razor with a hot towel.', cat: 'Shaving' },
+  { name: 'Kids Haircut', mins: 20, price: 15, note: 'Haircut for children under 12.', cat: 'Haircuts' },
+  { name: 'Beard Trim', mins: 15, price: 15, note: 'Shape-up and line-up.', cat: 'Shaving' },
+];
+const staff = [
+  { name: 'Anyone', next: 'Today · 1:00 PM', any: true, hue: 0 },
+  { name: 'Tyrone Anderson', next: 'Today · 2:30 PM', hue: 150 },
+  { name: 'Zahra Khalid', next: 'Tomorrow · 10:00 AM', hue: 18 },
+  { name: 'Jason Park', next: 'Tomorrow · 11:30 AM', hue: 210 },
+];
+const slots = ['10:00 AM', '11:30 AM', '1:00 PM', '2:30 PM', '4:00 PM', '5:30 PM'];
+const steps = ['Services', 'Staff', 'Date & Time', 'Checkout'];
+---
+
+<article class="feature" id="booking" data-reveal>
+  <div class="feature__copy">
+    <p class="feature__tag">Online Booking & Scheduling</p>
+    <h2 class="h2">A Booking Page Clients Actually Finish</h2>
+    <p class="lede">Your own customizable booking page, shareable anywhere. Every booking lands straight on your calendar, so you never miss a client.</p>
+    <ul class="checks">
+      <li><Icon name="check" />Shareable link, Instagram and Google “Book Now”</li>
+      <li><Icon name="check" />Staff schedules and availability built in</li>
+      <li><Icon name="check" />Free forever on the Online Booking plan</li>
+    </ul>
+  </div>
+
+  <div class="feature__stage">
+    <div class="bk app" data-booking role="group" aria-label="Sample booking page. Try booking an appointment.">
+      <header class="bk__bar">
+        <span class="bk__logo"><img src="/img/bos-mark-light.png" alt="" /></span>
+        <span class="bk__shop"><b>Northside Cuts</b><small>123 King Street West · Powered by BARBER-OS</small></span>
+        <span class="bk__pill"><Icon name="link" size={13} /><span>Share</span></span>
+        <span class="bk__pill"><Icon name="user" size={13} /><span>Log in</span></span>
+      </header>
+
+      <div class="bk__body" aria-live="polite">
+        <nav class="bk__nav" data-nav hidden>
+          <button type="button" class="bk__back" data-back aria-label="Back"><Icon name="chevronLeft" size={14} /><span>Back</span></button>
+          <ol class="bk__steps">
+            {steps.map((s, i) => <li data-dot={i + 1}><i>{i + 1}</i><span>{s}</span></li>)}
+          </ol>
+        </nav>
+
+        <!-- 1. Landing: services -->
+        <div class="bk__step" data-step="1">
+          <p class="bk__title">Northside Cuts</p>
+          <p class="bk__rate"><b>5.0</b> <span class="bk__stars">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={11} fill />)}</span> <u>(34)</u> · Open now</p>
+          <p class="bk__h">Services</p>
+          <div class="bk__chips" role="tablist" aria-label="Service category">
+            {cats.map((c, i) => <button type="button" role="tab" aria-selected={String(i === 0)} data-cat={c}>{c}</button>)}
+          </div>
+          <ul class="bk__svcs">
+            {services.map((s) => (
+              <li class="bk__svc" data-in={s.cat}>
+                <b>{s.name}</b>
+                <small>{s.mins} min</small>
+                <small class="bk__note">{s.note}</small>
+                <span class="bk__price">{s.was && <s>${s.was.toFixed(2)}</s>}${s.price.toFixed(2)}</span>
+                <button type="button" class="bk__add" data-svc={s.name} data-price={s.price} data-mins={s.mins} aria-label={`Add ${s.name}`}><Icon name="plus" size={15} /></button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- 2. Staff -->
+        <div class="bk__step" data-step="2" hidden>
+          <p class="bk__title">Select a Staff Member</p>
+          <p class="bk__for" data-o="for"></p>
+          <div class="bk__staff">
+            {staff.map((p) => (
+              <button type="button" data-staff={p.name} data-hue={p.any ? undefined : p.hue}>
+                {p.any
+                  ? <span class="av av--any"><Icon name="users" size={16} /></span>
+                  : <span class="av" style={`--h:${p.hue}`}>{p.name.split(' ').map((w) => w[0]).join('')}</span>}
+                <span><b>{p.name}</b><small>Next available {p.next}</small></span>
+                <em data-o="each"></em>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- 3. Date & time -->
+        <div class="bk__step" data-step="3" hidden>
+          <p class="bk__title">Select date & time</p>
+          <div class="bk__week" data-week role="radiogroup" aria-label="Day"></div>
+          <p class="bk__day"><b data-o="day"></b><small>America/Toronto</small></p>
+          <div class="bk__slots">
+            {slots.map((t) => <button type="button" data-slot={t}><b>{t}</b><small data-o="each"></small></button>)}
+          </div>
+        </div>
+
+        <!-- 4. Checkout -->
+        <div class="bk__step" data-step="4" hidden>
+          <p class="bk__title">Summary</p>
+          <div class="bk__line">
+            <span class="av av--any" data-av><Icon name="users" size={15} /></span>
+            <span><small data-o="with"></small><b data-o="svc"></b><small data-o="when"></small></span>
+            <b data-o="price"></b>
+          </div>
+          <dl class="bk__sum">
+            <div><dt>Subtotal</dt><dd data-o="sub"></dd></div>
+            <div><dt>Service Fee</dt><dd data-o="fee"></dd></div>
+            <div><dt>Tax</dt><dd data-o="tax"></dd></div>
+            <div class="bk__total"><dt>Total</dt><dd data-o="total"></dd></div>
+          </dl>
+          <button type="button" class="bk__cta" data-confirm>Book Now <Icon name="chevronRight" size={15} /></button>
+        </div>
+
+        <!-- 5. Done -->
+        <div class="bk__step bk__done" data-step="5" hidden>
+          <span class="bk__ok"><Icon name="check" size={22} /></span>
+          <p class="bk__title">You're booked!</p>
+          <p class="bk__msg" data-o="msg"></p>
+          <button type="button" class="bk__again" data-reset>Book another</button>
+        </div>
+      </div>
+    </div>
+    <p class="demo-note">Sample shop. Try it.</p>
+  </div>
+</article>
+
+<style>
+  .bk { max-width: 520px; margin: 0 auto; min-height: 540px; display: flex; flex-direction: column; container-type: inline-size; }
+
+  /* Teal shop bar, as on the live page */
+  .bk__bar { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--app); color: #fff; }
+  .bk__logo { width: 30px; height: 30px; border-radius: 7px; background: #fff; display: grid; place-items: center; flex: none; }
+  .bk__logo img { width: 19px; height: auto; filter: brightness(0) saturate(100%) invert(14%) sepia(39%) saturate(2130%) hue-rotate(166deg) brightness(92%) contrast(101%); }
+  .bk__shop { display: grid; min-width: 0; margin-right: auto; line-height: 1.25; }
+  .bk__shop b { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .bk__shop small { font-size: 10.5px; color: rgb(255 255 255 / 0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bk__pill { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 11px; font-weight: 500; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35); flex: none; }
+
+  .bk__body { padding: 16px; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 12px; }
+  .bk__shop b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Phone-width stage: icon-only header pills and Back button. */
+  @container (max-width: 340px) {
+    .bk__pill span, .bk__back span { display: none; }
+    .bk__pill { width: 26px; padding: 0; justify-content: center; }
+    .bk__back { padding: 0; width: 28px; justify-content: center; }
+    .bk__steps li + li::before { width: 10px; }
+    .bk__steps li span { display: none; }
+  }
+
+  /* Back + 4-step progress */
+  .bk__nav { display: flex; align-items: center; gap: 10px; }
+  .bk__nav[hidden] { display: none; }
+  .bk__back {
+    display: inline-flex; align-items: center; gap: 3px; height: 28px; padding: 0 10px 0 7px; border: 0; border-radius: 999px;
+    background: #fff; font-size: 11.5px; font-weight: 500; box-shadow: inset 0 0 0 1px #dfe2e4;
+    transition: transform 160ms var(--ease-out);
+  }
+  .bk__back:active { transform: scale(0.97); }
+  .bk__steps { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; }
+  .bk__steps li { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #8a9196; white-space: nowrap; }
+  .bk__steps li + li::before { content: ''; width: 12px; height: 1px; background: #d6d8da; }
+  .bk__steps i {
+    width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-style: normal;
+    font-size: 10px; font-weight: 600; background: #eef0f1; color: #6b7176;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .bk__steps .is-done i { background: #1e9fd0; color: #fff; }
+  .bk__steps .is-now { color: #111; font-weight: 600; }
+  .bk__steps .is-now i { background: var(--app); color: #fff; }
+  /* Only the current step keeps its label when space is tight. */
+  @container (max-width: 440px) { .bk__steps li:not(.is-now) span { display: none; } }
+
+  .bk__step { display: grid; gap: 10px; align-content: start; animation: step-in 0.4s var(--ease) both; }
+  .bk__step[hidden] { display: none; }
+  /* Steps enter from the side they're going: forward from the right, Back from the left. */
+  [data-dir='back'] .bk__step { animation-name: step-back; }
+  @keyframes step-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+  @keyframes step-back { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .bk__step, [data-dir='back'] .bk__step { animation: fade 200ms ease both; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  }
+
+  .bk__title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  .bk__rate { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #6b7176; margin-top: -4px; }
+  .bk__rate b { color: #111; }
+  .bk__stars { display: inline-flex; color: #f5b400; }
+  .bk__rate u { text-underline-offset: 2px; }
+  .bk__h { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; margin-top: 4px; padding-top: 12px; border-top: 1px solid #eceeef; }
+
+  .bk__chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .bk__chips button {
+    flex: none; height: 30px; padding: 0 13px; border: 0; border-radius: 999px; background: #fff;
+    font-size: 12px; font-weight: 500; box-shadow: inset 0 0 0 1px #dfe2e4;
+    transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out);
+  }
+  .bk__chips button:active { transform: scale(0.97); }
+  .bk__chips [aria-selected='true'] { background: var(--app); color: #fff; box-shadow: none; }
+
+  .bk__svcs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @container (max-width: 400px) { .bk__svcs { grid-template-columns: 1fr; } }
+  .bk__svc {
+    position: relative; display: grid; gap: 2px; align-content: start; padding: 11px 12px;
+    border-radius: 12px; box-shadow: inset 0 0 0 1px #e6e8ea, 0 1px 2px rgb(0 0 0 / 0.03);
+  }
+  .bk__svc[hidden] { display: none; }
+  .bk__svc b { font-size: 13px; font-weight: 600; }
+  .bk__svc small { font-size: 11.5px; color: #6b7176; }
+  .bk__note { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; }
+  .bk__price { margin-top: 8px; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .bk__price s { font-size: 11px; font-weight: 400; color: #8a9196; margin-right: 6px; }
+  .bk__add {
+    position: absolute; right: 10px; bottom: 10px; width: 28px; height: 28px; border: 0; border-radius: 50%;
+    display: grid; place-items: center; background: #fff; box-shadow: inset 0 0 0 1px #d6d8da;
+    transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out);
+  }
+  .bk__add:active { transform: scale(0.94); }
+
+  .bk__for { font-size: 12px; font-weight: 600; margin-top: -4px; }
+  .bk__for small { font-weight: 400; color: #6b7176; }
+  .bk__staff { display: grid; gap: 6px; }
+  .bk__staff button {
+    display: flex; align-items: center; gap: 10px; text-align: left; padding: 9px 12px; border: 0; border-radius: 12px;
+    background: #fff; box-shadow: inset 0 0 0 1px #e6e8ea; transition: box-shadow 150ms ease, transform 160ms var(--ease-out);
+  }
+  .bk__staff button:active { transform: scale(0.98); }
+  .bk__staff button > span:nth-child(2) { flex: 1; min-width: 0; }
+  .bk__staff b, .bk__line b { display: block; font-weight: 600; font-size: 13px; }
+  .bk__staff small, .bk__line small { display: block; color: #6b7176; font-size: 11.5px; }
+  .bk__staff em { font-style: normal; font-weight: 600; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .av {
+    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    background: hsl(var(--h) 60% 90%); color: hsl(var(--h) 50% 30%); font-size: 11.5px; font-weight: 700;
+  }
+  .av--any { background: #1e9fd0; color: #fff; }
+
+  .bk__week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+  .bk__week :global(button) {
+    display: grid; justify-items: center; gap: 3px; padding: 4px 0; border: 0; background: none; font-size: 10.5px; color: #8a9196;
+  }
+  .bk__week :global(button b) {
+    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 13px; font-weight: 600; color: #111; box-shadow: inset 0 0 0 1px #e6e8ea;
+    transition: background-color 200ms ease, color 200ms ease, transform 160ms var(--ease-out);
+  }
+  .bk__week :global(button:active b) { transform: scale(0.94); }
+  .bk__week :global([aria-checked='true'] b) { background: var(--app); color: #fff; box-shadow: none; }
+  .bk__week :global(button:disabled) { cursor: default; }
+  .bk__week :global(button:disabled b) { color: #c4c7ca; box-shadow: none; }
+  .bk__week :global(button small) { font-size: 9.5px; min-height: 1em; }
+  .bk__day { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; }
+  .bk__day small { font-size: 10.5px; color: #8a9196; }
+  .bk__slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .bk__slots button {
+    display: grid; gap: 1px; padding: 8px 4px; border: 0; border-radius: 10px; background: #fff;
+    box-shadow: inset 0 0 0 1px #dfe2e4; transition: box-shadow 150ms ease, transform 160ms var(--ease-out);
+  }
+  .bk__slots button:active { transform: scale(0.97); }
+  .bk__slots b { font-size: 12.5px; font-weight: 600; }
+  .bk__slots small { font-size: 10.5px; color: #6b7176; }
+
+  .bk__line { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 12px; background: #f6f7f8; }
+  .bk__line > span:nth-child(2) { flex: 1; }
+  .bk__line > b { font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  .bk__sum { margin: 0; display: grid; gap: 7px; font-size: 12.5px; }
+  .bk__sum div { display: flex; justify-content: space-between; }
+  .bk__sum dt { color: #6b7176; }
+  .bk__sum dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .bk__total { padding-top: 10px; margin-top: 3px; border-top: 1px solid #eceeef; font-size: 15px; font-weight: 700; }
+  .bk__total dt { color: #111; }
+  .bk__cta, .bk__again {
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 40px; border: 0; border-radius: 999px;
+    background: var(--app); color: #fff; font-weight: 600; font-size: 13px; transition: transform 160ms var(--ease-out);
+  }
+  .bk__cta { width: 100%; margin-top: 4px; }
+  .bk__again { padding: 0 20px; background: #fff; color: #111; box-shadow: inset 0 0 0 1px #d6d8da; }
+  .bk__cta:active, .bk__again:active { transform: scale(0.97); }
+
+  .bk__done { justify-items: center; text-align: center; padding-top: 48px; gap: 12px; }
+  .bk__ok { width: 52px; height: 52px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; }
+  .bk__msg { color: #4b5257; max-width: 32ch; font-size: 13px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .bk__add:hover { background: var(--app); color: #fff; box-shadow: none; }
+    .bk__staff button:hover, .bk__slots button:hover { box-shadow: inset 0 0 0 1.5px var(--app); }
+    .bk__chips button:not([aria-selected='true']):hover { box-shadow: inset 0 0 0 1px #9aa0a5; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-booking]')!;
+  const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+  const nav = root.querySelector<HTMLElement>('[data-nav]')!;
+  const dots = [...root.querySelectorAll<HTMLElement>('[data-dot]')];
+  const week = root.querySelector<HTMLElement>('[data-week]')!;
+  const money = (n: number) => `$${n.toFixed(2)}`;
+  const s = { step: 1, svc: '', price: 0, mins: 0, staff: 'Anyone', day: '', time: '' };
+
+  const go = (n: number, dir: 'fwd' | 'back' = 'fwd') => {
+    root.dataset.dir = dir;
+    s.step = n;
+    steps.forEach((el) => (el.hidden = Number(el.dataset.step) !== n));
+    // The progress row shows for the booking steps, not the landing or the confirmation.
+    nav.hidden = n === 1 || n === 5;
+    dots.forEach((d) => {
+      const i = Number(d.dataset.dot);
+      d.classList.toggle('is-done', i < n);
+      d.classList.toggle('is-now', i === n);
+    });
+  };
+  const out = (k: string, v: string) => root.querySelectorAll(`[data-o="${k}"]`).forEach((el) => (el.textContent = v));
+
+  // Category chips filter the service cards.
+  const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-cat]')];
+  chips.forEach((c) =>
+    c.addEventListener('click', () => {
+      chips.forEach((o) => o.setAttribute('aria-selected', String(o === c)));
+      root.querySelectorAll<HTMLElement>('[data-in]').forEach((li) => {
+        li.hidden = c.dataset.cat !== 'All Services' && li.dataset.in !== c.dataset.cat;
+      });
+    })
+  );
+
+  root.querySelectorAll<HTMLButtonElement>('[data-svc]').forEach((b) =>
+    b.addEventListener('click', () => {
+      s.svc = b.dataset.svc!;
+      s.price = Number(b.dataset.price);
+      s.mins = Number(b.dataset.mins);
+      root.querySelector('[data-o="for"]')!.innerHTML = `${s.svc} <small>· ${s.mins} min</small>`;
+      out('each', money(s.price));
+      go(2);
+    })
+  );
+
+  // The summary shows the chosen barber's avatar, or the "anyone" mark.
+  const av = root.querySelector<HTMLElement>('[data-av]')!;
+  const anyMark = av.innerHTML;
+  root.querySelectorAll<HTMLButtonElement>('[data-staff]').forEach((b) =>
+    b.addEventListener('click', () => {
+      s.staff = b.dataset.staff!;
+      const hue = b.dataset.hue;
+      av.classList.toggle('av--any', !hue);
+      av.style.setProperty('--h', hue ?? '0');
+      av.innerHTML = hue ? s.staff.split(' ').map((w) => w[0]).join('') : anyMark;
+      go(3);
+    })
+  );
+
+  // A week from today. The shop is closed on Sundays.
+  const fmt = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleDateString('en-US', o);
+  const pickDay = (btn: HTMLButtonElement) => {
+    week.querySelectorAll('button').forEach((o) => o.setAttribute('aria-checked', String(o === btn)));
+    s.day = btn.dataset.label!;
+    out('day', s.day);
+  };
+  const today = new Date();
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const closed = d.getDay() === 0;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', 'false');
+    btn.disabled = closed;
+    btn.dataset.label = i === 0 ? `Today, ${fmt(d, { month: 'short', day: 'numeric' })}` : fmt(d, { weekday: 'long', month: 'short', day: 'numeric' });
+    btn.innerHTML = `${fmt(d, { weekday: 'short' })}<b>${d.getDate()}</b><small>${closed ? 'Closed' : ''}</small>`;
+    btn.addEventListener('click', () => pickDay(btn));
+    week.append(btn);
+  }
+  pickDay(week.querySelector<HTMLButtonElement>('button:not(:disabled)')!);
+
+  root.querySelectorAll<HTMLButtonElement>('[data-slot]').forEach((b) =>
+    b.addEventListener('click', () => {
+      s.time = b.dataset.slot!;
+      const fee = Math.round(s.price * 0.03 * 100) / 100;
+      const tax = Math.round((s.price + fee) * 0.13 * 100) / 100;
+      out('with', s.staff === 'Anyone' ? 'Book with anyone' : `With ${s.staff}`);
+      out('svc', s.svc);
+      out('when', `${s.day} · ${s.time} · ${s.mins} min`);
+      out('price', money(s.price));
+      out('sub', money(s.price));
+      out('fee', money(fee));
+      out('tax', money(tax));
+      out('total', money(s.price + fee + tax));
+      go(4);
+    })
+  );
+
+  root.querySelector('[data-confirm]')!.addEventListener('click', () => {
+    out('msg', `${s.svc}, ${s.day} at ${s.time}. It's on the shop calendar, and a reminder goes out before your visit.`);
+    go(5);
+  });
+  root.querySelector('[data-back]')!.addEventListener('click', () => go(Math.max(1, s.step - 1), 'back'));
+  root.querySelector('[data-reset]')!.addEventListener('click', () => go(1));
+</script>

@@ -1,0 +1,315 @@
+---
+import { GET_STARTED } from '../data/site';
+import { featureGroups, featureHref } from '../data/features';
+import Icon from './ui/Icon.astro';
+
+const links = [
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/pos-hardware', label: 'POS Hardware' },
+  { href: '/app-download', label: 'App Download' },
+  { href: '/contact-us', label: 'Contact' },
+];
+---
+
+<header class="nav" data-nav>
+  <div class="wrap nav__in">
+    <a href="/" class="nav__logo" aria-label="Barber-OS home">
+      <img src="/img/bos-logo-ink.png" alt="" width="1200" height="135" />
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <button type="button" class="nav__trigger" aria-expanded="false" aria-controls="mega" data-mega-trigger>
+        Features <Icon name="chevronDown" size={16} class="nav__chev" />
+      </button>
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="nav__end">
+      <a class="btn btn--sm" href={GET_STARTED}>Get Started</a>
+      <a class="nav__account" href="/login" aria-label="Log in"><Icon name="user" size={20} /></a>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="sheet" data-menu>
+        <span class="sr-only">Menu</span>
+        <span class="nav__burger" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mega" id="mega" data-mega data-state="closed">
+    <div class="mega__panel">
+      {featureGroups.map((g, gi) => (
+        <section class="mega__col" style={`--i:${gi}`} aria-labelledby={`mega-h-${gi}`}>
+          <h2 class="mega__h" id={`mega-h-${gi}`}>{g.title}</h2>
+          <ul>
+            {g.items.map((f) => (
+              <li>
+                <a href={featureHref(f.slug)} class="mega__item">
+                  <span class="mega__ico"><Icon name={f.icon} size={24} /></span>
+                  <span class="mega__name">{f.name}</span>
+                  {f.tag && <span class:list={['tag', `tag--${f.tag}`]}>{f.tag === 'new' ? 'New' : 'Hot'}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <div class="sheet" id="sheet" data-sheet hidden>
+    <details class="sheet__features">
+      <summary>Features <Icon name="chevronDown" size={18} /></summary>
+      {featureGroups.map((g) => (
+        <details class="sheet__group">
+          <summary>{g.title} <Icon name="chevronDown" size={16} /></summary>
+          <div class="sheet__items">
+            {g.items.map((f) => (
+              <a href={featureHref(f.slug)}><Icon name={f.icon} size={20} />{f.name}{f.tag && <span class:list={['tag', `tag--${f.tag}`]}>{f.tag === 'new' ? 'New' : 'Hot'}</span>}</a>
+            ))}
+          </div>
+        </details>
+      ))}
+    </details>
+    {links.map((l) => <a class="sheet__link" href={l.href}>{l.label}</a>)}
+    <a class="sheet__link" href="/login">Log in</a>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgb(248 248 248 / 0.78);
+    -webkit-backdrop-filter: saturate(1.6) blur(16px);
+    backdrop-filter: saturate(1.6) blur(16px);
+    transition: box-shadow 200ms ease, background-color 200ms ease;
+  }
+  .nav.is-scrolled, .nav.is-open { box-shadow: 0 1px 0 var(--line); background: rgb(255 255 255 / 0.86); }
+  /* A blurred parent breaks the dropdown that overflows it, so go solid while it's open. */
+  .nav.is-open { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav__in { display: flex; align-items: center; gap: 28px; height: 72px; }
+  .nav__logo { width: 150px; flex: none; }
+  .nav__logo img { width: 100%; height: auto; }
+
+  .nav__links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  .nav__links > a, .nav__trigger {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 40px; padding: 0 14px; border-radius: 10px; border: 0; background: none;
+    text-decoration: none; font-weight: 500; font-size: 0.9375rem; color: var(--ink-2);
+    transition: color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+  }
+  .nav__trigger { box-shadow: inset 0 0 0 1px var(--line); background: rgb(255 255 255 / 0.6); }
+  @media (hover: hover) and (pointer: fine) {
+    .nav__links > a:hover, .nav__trigger:hover { color: var(--ink); background: rgb(0 0 0 / 0.04); }
+  }
+  .nav__trigger[aria-expanded='true'] { color: var(--ink); background: #fff; box-shadow: inset 0 0 0 1px var(--line-2); }
+  .nav__trigger :global(.nav__chev) { transition: transform 200ms var(--ease-out); }
+  .nav__trigger[aria-expanded='true'] :global(.nav__chev) { transform: rotate(180deg); }
+
+  .nav__end { display: flex; align-items: center; gap: 10px; }
+  .nav__account {
+    width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+    color: var(--blue); box-shadow: inset 0 0 0 1.5px var(--blue); background: #fff;
+    transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nav__account:hover { background: var(--blue); color: #fff; }
+  }
+  .nav__account:active { transform: scale(0.97); }
+
+  /* Mega menu: anchored under the nav, grows from the top edge. */
+  .mega {
+    position: absolute; left: 0; right: 0; top: 100%;
+    padding: 0 var(--gutter);
+    pointer-events: none;
+  }
+  .mega__panel {
+    max-width: 1220px; margin: 6px auto 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 24px 60px -20px rgb(0 0 0 / 0.25);
+    /* Grows out of the Features trigger, not the panel's centre (JS sets --ox). */
+    transform-origin: var(--ox, 50%) top;
+    opacity: 0; transform: translateY(-6px) scale(0.985);
+    transition: opacity 150ms ease, transform 150ms var(--ease-out), visibility 0s 150ms;
+    visibility: hidden;
+  }
+  .mega[data-state='open'] { pointer-events: auto; }
+  .mega[data-state='open'] .mega__panel {
+    opacity: 1; transform: none; visibility: visible;
+    transition: opacity 200ms var(--ease-out), transform 220ms var(--ease-out), visibility 0s;
+  }
+  .mega__col { padding: 30px 22px 26px; }
+  .mega__col + .mega__col { border-left: 1px solid var(--line); }
+  .mega__h { font-size: 1.0625rem; font-weight: 650; letter-spacing: -0.015em; text-align: center; margin-bottom: 16px; }
+  .mega ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .mega__item {
+    position: relative; display: flex; align-items: center; gap: 14px;
+    padding: 10px 12px; border-radius: 12px; text-decoration: none;
+    font-size: 0.9375rem; font-weight: 500; color: #2a2a2e; line-height: 1.25;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .mega__ico {
+    width: 38px; height: 38px; border-radius: 10px; flex: none; display: grid; place-items: center;
+    color: var(--blue); background: var(--blue-soft);
+    transition: transform 200ms var(--ease-out), background-color 150ms ease, color 150ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .mega__item:hover { background: #f3f6fb; color: var(--ink); }
+    .mega__item:hover .mega__ico { background: var(--blue); color: #fff; transform: scale(1.04); }
+  }
+  .mega__item:active .mega__ico { transform: scale(0.96); }
+  .mega__name { flex: 1; }
+
+  /* Items settle in column by column on open. */
+  .mega[data-state='open'][data-fresh] .mega__col {
+    animation: col-in 260ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 35ms);
+  }
+  @keyframes col-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .tag {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 999px; line-height: 1.4; flex: none;
+  }
+  .tag--new { color: #0f8a4f; background: #def7e8; }
+  .tag--hot { color: #e2620f; box-shadow: inset 0 0 0 1px #f5a874; background: #fff4ec; }
+
+  /* Mobile */
+  .nav__menu {
+    display: none; width: 42px; height: 42px; border-radius: 12px; border: 0;
+    background: #fff; box-shadow: inset 0 0 0 1px var(--line);
+    align-items: center; justify-content: center;
+    transition: transform 160ms var(--ease-out);
+  }
+  .nav__menu:active { transform: scale(0.97); }
+  .nav__burger { position: relative; width: 18px; height: 12px; }
+  .nav__burger i { position: absolute; left: 0; right: 0; height: 1.75px; border-radius: 2px; background: var(--ink); transition: transform 250ms var(--ease-out), top 250ms var(--ease-out); }
+  .nav__burger i:first-child { top: 1px; }
+  .nav__burger i:last-child { top: 9px; }
+  .nav__menu[aria-expanded='true'] .nav__burger i:first-child { top: 5px; transform: rotate(45deg); }
+  .nav__menu[aria-expanded='true'] .nav__burger i:last-child { top: 5px; transform: rotate(-45deg); }
+
+  .sheet {
+    max-height: calc(100svh - 64px); overflow-y: auto; overscroll-behavior: contain;
+    padding: 4px var(--gutter) 24px; border-top: 1px solid var(--line); background: #fff;
+    /* Transitions (not keyframes) so a tap mid-open reverses from where the sheet is.
+       It leaves the way it came: back up and out. */
+    transition: opacity 200ms var(--ease-out), transform 240ms var(--ease-out), display 240ms allow-discrete;
+  }
+  .sheet[hidden] { display: none; opacity: 0; transform: translateY(-6px); transition-duration: 150ms; }
+  @starting-style { .sheet:not([hidden]) { opacity: 0; transform: translateY(-6px); } }
+  .sheet__features > summary, .sheet__link {
+    display: flex; justify-content: space-between; align-items: center; list-style: none; cursor: pointer;
+    text-decoration: none; font-weight: 600; font-size: 1.125rem; letter-spacing: -0.015em;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+  }
+  .sheet__features summary::-webkit-details-marker { display: none; }
+  .sheet__features summary :global(svg) { transition: transform 200ms var(--ease-out); }
+  .sheet__features[open] > summary :global(svg), .sheet__group[open] > summary :global(svg) { transform: rotate(180deg); }
+  /* Each feature group starts collapsed; tap its heading to open it. */
+  .sheet__group { border-bottom: 1px solid var(--line); }
+  .sheet__group > summary {
+    display: flex; justify-content: space-between; align-items: center; list-style: none; cursor: pointer;
+    padding: 13px 0; font-size: 0.9375rem; font-weight: 600; color: var(--ink-2);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sheet__group > summary :global(svg) { color: var(--ink-3); }
+  .sheet__group[open] > summary { color: var(--ink); }
+  .sheet__items { display: grid; padding: 0 0 8px 4px; }
+  .sheet__group a { display: flex; align-items: center; gap: 12px; padding: 9px 0; text-decoration: none; font-size: 0.975rem; color: #2a2a2e; }
+  .sheet__group a :global(svg) { color: var(--blue); flex: none; }
+
+  @media (max-width: 1080px) {
+    .nav__links > a:nth-child(4) { display: none; }
+  }
+  @media (max-width: 940px) {
+    .nav__links, .nav__account { display: none; }
+    .nav__menu { display: inline-flex; }
+    .nav__in { height: 64px; }
+    .nav__logo { width: 128px; margin-right: auto; }
+    .mega { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mega__panel, .mega[data-state='open'] .mega__panel { transform: none; }
+    .mega[data-state='open'][data-fresh] .mega__col { animation: none; }
+    .sheet, .sheet[hidden] { transform: none; }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .nav, .nav.is-scrolled { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
+  @media (prefers-contrast: more) {
+    .nav.is-scrolled, .nav.is-open { box-shadow: 0 1px 0 var(--ink-3); background: #fff; }
+  }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-nav]')!;
+  const trigger = nav.querySelector<HTMLButtonElement>('[data-mega-trigger]')!;
+  const mega = nav.querySelector<HTMLElement>('[data-mega]')!;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  let openTimer = 0;
+  let closeTimer = 0;
+
+  const setMega = (open: boolean) => {
+    clearTimeout(openTimer);
+    clearTimeout(closeTimer);
+    const was = mega.dataset.state === 'open';
+    if (open === was) return;
+    // Stagger only when opening from closed, never on re-hover.
+    if (open) {
+      mega.setAttribute('data-fresh', '');
+      // Anchor the panel's growth to the trigger so the menu reads as coming from it.
+      const panel = mega.firstElementChild!.getBoundingClientRect();
+      const t = trigger.getBoundingClientRect();
+      mega.style.setProperty('--ox', `${t.left + t.width / 2 - panel.left}px`);
+    } else mega.removeAttribute('data-fresh');
+    mega.dataset.state = open ? 'open' : 'closed';
+    trigger.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('is-open', open);
+  };
+
+  trigger.addEventListener('click', () => setMega(mega.dataset.state !== 'open'));
+  // Hover intent: a short delay to open, a forgiving delay to close.
+  [trigger, mega].forEach((el) => {
+    el.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse' || !fine.matches) return;
+      clearTimeout(closeTimer);
+      if (mega.dataset.state !== 'open') openTimer = window.setTimeout(() => setMega(true), 80);
+    });
+    el.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(openTimer);
+      closeTimer = window.setTimeout(() => setMega(false), 180);
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mega.dataset.state === 'open') {
+      setMega(false);
+      trigger.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!nav.contains(e.target as Node)) setMega(false);
+  });
+  mega.addEventListener('focusout', (e) => {
+    if (!nav.contains(e.relatedTarget as Node)) setMega(false);
+  });
+  mega.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setMega(false); });
+
+  // Mobile sheet
+  const btn = nav.querySelector<HTMLButtonElement>('[data-menu]')!;
+  const sheet = nav.querySelector<HTMLElement>('[data-sheet]')!;
+  const closeSheet = () => { sheet.hidden = true; btn.setAttribute('aria-expanded', 'false'); nav.classList.remove('is-open'); };
+  btn.addEventListener('click', () => {
+    const open = sheet.hidden;
+    sheet.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('is-open', open);
+  });
+  sheet.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) closeSheet(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+
+  const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

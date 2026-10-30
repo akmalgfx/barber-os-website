@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Booking from '../components/Booking.astro';
+import Payments from '../components/Payments.astro';
+import NoShow from '../components/NoShow.astro';
+import ClipAI from '../components/ClipAI.astro';
+import Inventory from '../components/Inventory.astro';
+import Team from '../components/Team.astro';
+import Brand from '../components/Brand.astro';
+import Hardware from '../components/Hardware.astro';
+import Stats from '../components/Stats.astro';
+import Closing from '../components/Closing.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="Barber-OS: #1 barbershop management software"
+  description="Booking, payments, staff, inventory and an AI front desk in one system built for barbershops. Start a 7-day free trial."
+>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <section class="section features" id="features">
+      <div class="features__field" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="wrap">
+        <div class="section-head section-head--center" data-reveal>
+          <h2 class="h2">Powerful Features.<br />One Simple System</h2>
+          <p class="lede">Everything your shop runs on, from the first booking to the last sale. Try each one below.</p>
+        </div>
+        <Booking />
+        <Payments />
+        <NoShow />
+        <ClipAI />
+        <Inventory />
+        <Team />
+        <Brand />
+      </div>
+    </section>
+    <Hardware />
+    <Stats />
+    <Closing />
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .features { position: relative; padding-top: 0; isolation: isolate; }
+  /* Soft colour field the glass cards sit on. Gradients only, so it costs nothing to paint. */
+  .features__field { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .features__field i {
+    position: absolute; width: 900px; height: 900px; border-radius: 50%;
+    background: radial-gradient(closest-side, var(--c), transparent);
+    opacity: 1;
+    animation: drift 26s ease-in-out infinite alternate;
+  }
+  .features__field i:nth-child(1) { --c: rgb(18 109 251 / 0.2); left: -220px; top: 4%; }
+  .features__field i:nth-child(2) { --c: rgb(30 187 236 / 0.26); right: -260px; top: 24%; animation-delay: -8s; }
+  .features__field i:nth-child(3) { --c: rgb(132 69 188 / 0.14); left: -160px; top: 50%; animation-delay: -14s; }
+  .features__field i:nth-child(4) { --c: rgb(18 109 251 / 0.18); right: -220px; top: 74%; animation-delay: -4s; }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(60px, -40px, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .features__field i { animation: none; } }
+</style>
+
+<script>
+  // Light on the glass follows the pointer. Written on the card itself, so only its glare repaints.
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('.feature').forEach((card) => {
+      let raf = 0;
+      card.addEventListener('pointermove', (e) => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+          card.style.setProperty('--my', `${e.clientY - r.top}px`);
+        });
+      });
+    });
+  }
+</script>

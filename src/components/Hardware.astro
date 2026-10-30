@@ -1,0 +1,78 @@
+---
+import Icon from './ui/Icon.astro';
+
+const parts = [
+  { x: 41, y: 33, name: 'POS Station', text: 'Calendar, checkout and your whole shop on one stand.' },
+  { x: 41, y: 74, name: 'Receipt Printer', text: 'Built into the stand.' },
+  { x: 65, y: 31, name: 'Card Terminal', text: 'Tap, insert or swipe, right at the chair.' },
+  { x: 21, y: 52, name: 'Barcode Scanner', text: 'Scan to sell and update stock.' },
+  { x: 74, y: 63, name: 'Cash Drawer', text: 'Cash tracked against every sale.' },
+];
+---
+
+<section class="section hw" id="hardware">
+  <div class="wrap">
+    <div class="section-head section-head--center" data-reveal>
+      <h2 class="h2">Runs On Any Device.<br />Or On Ours</h2>
+      <p class="lede">Barber-OS works on desktops, tablets and phones. For a full POS setup, our hardware bundles include terminals, printers and scanners.</p>
+      <a class="link" href="/pos-hardware">Shop POS hardware <Icon name="arrowRight" size={16} /></a>
+    </div>
+    <div class="hw__grid" data-reveal data-hw>
+      <figure class="hw__fig">
+        <img src="/img/bos-hardware.webp" width="2000" height="1108" loading="lazy" decoding="async"
+          alt="Barber-OS hardware: POS stand with tablet and built-in printer, card terminal, barcode scanner and cash drawer." />
+        {parts.map((p, i) => <span class="hw__dot" style={`--x:${p.x}%;--y:${p.y}%`} data-dot={i} aria-hidden="true">{i + 1}</span>)}
+      </figure>
+      <ol class="hw__list">
+        {parts.map((p, i) => (
+          <li>
+            <button type="button" data-part={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+              <span class="hw__n">{i + 1}</span>
+              <span><b>{p.name}</b><small>{p.text}</small></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hw__grid { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .hw__fig { position: relative; margin: 0; border-radius: var(--r-lg); background: #f7f7f7; box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+  .hw__fig img { width: 100%; height: auto; }
+  .hw__dot {
+    position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%) scale(0.9);
+    width: 26px; height: 26px; border-radius: 50%; background: #fff; color: var(--ink);
+    font-size: 12px; font-weight: 600; display: grid; place-items: center;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.18); transition: transform 0.3s var(--ease), background-color 0.3s, color 0.3s;
+  }
+  .hw__dot.on { background: var(--blue); color: #fff; transform: translate(-50%, -50%) scale(1.1); }
+  .hw__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .hw__list button {
+    width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left;
+    padding: 14px 16px; border: 0; border-radius: 14px; background: none; transition: background-color 0.2s;
+  }
+  @media (hover: hover) and (pointer: fine) { .hw__list button:hover { background: var(--surface); } }
+  .hw__list button[aria-pressed='true'] { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .hw__n { width: 24px; height: 24px; border-radius: 50%; background: #ececee; display: grid; place-items: center; font-size: 12px; font-weight: 600; flex: none; margin-top: 1px; }
+  .hw__list button[aria-pressed='true'] .hw__n { background: var(--blue); color: #fff; }
+  .hw__list b { display: block; font-weight: 600; font-size: 1rem; }
+  .hw__list small { color: var(--ink-3); font-size: 0.9rem; }
+  @media (max-width: 900px) { .hw__grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-hw]')!;
+  const dots = [...root.querySelectorAll<HTMLElement>('[data-dot]')];
+  const btns = [...root.querySelectorAll<HTMLButtonElement>('[data-part]')];
+  const pick = (i: number) => {
+    btns.forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
+    dots.forEach((d, j) => d.classList.toggle('on', i === j));
+  };
+  btns.forEach((b, i) => {
+    b.addEventListener('click', () => pick(i));
+    b.addEventListener('mouseenter', () => pick(i));
+  });
+  pick(0);
+</script>

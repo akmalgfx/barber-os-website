@@ -1,0 +1,151 @@
+---
+import { GET_STARTED } from '../data/site';
+import Icon from './ui/Icon.astro';
+import PlanCards from './PlanCards.astro';
+
+const stories = [
+  { id: 'BoarpYocDMc', who: 'Enzo Fungo', role: 'Solo Barber, Zoblends', title: 'How Zoblends Stays Fully Booked',
+    body: 'Smoother client bookings, self-scheduling and faster checkouts on busy days, plus the one feature he “can’t live without.”' },
+  { id: 'pqFbRn1Buy0', who: 'Harvey & Hadeer', role: 'Owners of Barberista', title: 'How Barberista Streamlined Their Entire Business',
+    body: 'Harvey calls the system “modern.” Hadeer calls it “different,” because it’s built specifically for the barbering industry.' },
+];
+
+
+const faq = [
+  ['Do I need special hardware to use Barber-OS?', 'No. Barber-OS works on desktops, tablets, and smartphones. However, if you want a full POS setup, we offer hardware bundles that include terminals, printers, and scanners.'],
+  ['How long does it take to set up Barber-OS?', 'Most shops are up and running within a day. Larger shops with multiple staff and services may take a bit longer, but our onboarding team makes the process smooth.'],
+  ['Can someone help me migrate from my old system?', 'Yes. Our team can assist with importing your client list, staff details, and service menus so the transition is seamless.'],
+  ['Is there training included when I sign up?', 'Absolutely. Every plan includes training sessions for both owners and barbers, plus access to ongoing support and tutorials.'],
+  ['Does Barber-OS work for single-chair barbers as well as large shops?', 'Absolutely. Barber-OS is built to scale with your business — whether you’re an independent barber managing your own clients or a multi-location shop with a full team.'],
+];
+---
+
+<section class="section" id="stories">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <h2 class="h2">Built With Barbers, For Barbers</h2>
+    </div>
+    <div class="stories">
+      {stories.map((s) => (
+        <article class="story" data-reveal>
+          <div class="story__video" data-yt={s.id}>
+            <img src={`https://i.ytimg.com/vi/${s.id}/maxresdefault.jpg`} alt="" loading="lazy" decoding="async" width="1280" height="720" />
+            <button type="button" class="story__play" aria-label={`Play: ${s.title}`}><Icon name="play" size={22} fill /></button>
+          </div>
+          <div class="story__text">
+            <h3 class="h3">{s.title}</h3>
+            <p>{s.body}</p>
+            <p class="story__who"><b>{s.who}</b> · {s.role}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="section pricing" id="pricing">
+  <div class="wrap">
+    <div class="section-head section-head--center" data-reveal>
+      <h2 class="h2">Choose The Plan That Suits You</h2>
+      <p class="lede">Every plan includes training for owners and barbers, plus ongoing support.</p>
+    </div>
+    <PlanCards highlights={false} />
+    <p class="small plans__fee">Card payments start at 2.2% + $0.20 per payment. <a class="link" href="/pricing">Compare every feature</a></p>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap faq">
+    <div data-reveal>
+      <h2 class="h2">Common Questions, Clear Answers</h2>
+      <p class="lede faq__lede">Still curious? <a class="link" href="/contact-us">Talk to our team</a></p>
+    </div>
+    <div class="faq__list" data-reveal>
+      {faq.map(([q, a], i) => (
+        <details open={i === 0}>
+          <summary>{q}<Icon name="plus" size={18} /></summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="cta__box" data-reveal>
+      <h2 class="h2">Power Your Entire Business</h2>
+      <p class="lede">Most shops are up and running within a day, and our team can bring your clients, staff and services across.</p>
+      <div class="cta__acts">
+        <a class="btn" href={GET_STARTED}>Get Started</a>
+        <a class="btn btn--ghost cta__ghost" href="/contact-us">Contact us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stories { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .story { transition: transform 300ms var(--ease-out); background: var(--surface); border-radius: var(--r-lg); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; display: grid; }
+  .story__video { position: relative; aspect-ratio: 16 / 9; background: #111; }
+  .story__video { overflow: hidden; }
+  .story__video img { transition: transform 600ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .story:hover .story__video img { transform: scale(1.03); } }
+  .story__video img, .story__video :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; }
+  .story__play {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 68px; height: 68px; border-radius: 50%; border: 0; background: rgb(255 255 255 / 0.95); color: var(--ink);
+    display: grid; place-items: center; box-shadow: 0 10px 30px rgb(0 0 0 / 0.3); transition: transform 0.25s var(--ease);
+  }
+  .story__play svg { margin-left: 3px; }
+  @media (hover: hover) and (pointer: fine) { .story__play:hover { transform: translate(-50%, -50%) scale(1.06); } }
+  .story__play:active { transform: translate(-50%, -50%) scale(0.97); }
+  .story__text { padding: 24px 26px 28px; display: grid; gap: 10px; }
+  .story__text > p { color: var(--ink-2); }
+  .story__who { font-size: 0.9rem; color: var(--ink-3) !important; }
+  .story__who b { color: var(--ink); font-weight: 600; }
+
+  .pricing { background: var(--surface); }
+  .plans__fee { text-align: center; margin-top: 20px; }
+
+  .faq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .faq__lede { margin-top: 16px; }
+  .faq__list { display: grid; gap: 10px; }
+  details { background: var(--surface); border-radius: 18px; box-shadow: inset 0 0 0 1px var(--line); }
+  summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px;
+    padding: 20px 22px; font-weight: 550; font-size: 1.0625rem; letter-spacing: -0.01em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { flex: none; color: var(--ink-3); transition: transform 0.3s var(--ease); }
+  details[open] summary svg { transform: rotate(45deg); }
+  details p { padding: 0 22px 22px; color: var(--ink-2); }
+
+  .cta { padding: 0 0 clamp(80px, 10vw, 128px); }
+  .cta__box {
+    border-radius: 32px; padding: clamp(48px, 8vw, 96px) var(--gutter); text-align: center;
+    background: var(--ink); color: #fff; display: grid; justify-items: center; gap: 18px;
+  }
+  .cta__box .lede { color: #b8b8be; max-width: 32em; }
+  .cta__acts { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .cta__ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3); }
+  @media (hover: hover) and (pointer: fine) { .cta__ghost:hover { background: transparent; box-shadow: inset 0 0 0 1px #fff; } }
+
+  @media (max-width: 900px) {
+    .stories, .faq { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-yt]').forEach((box) => {
+    const btn = box.querySelector('button')!;
+    btn.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      f.title = btn.getAttribute('aria-label')!.replace('Play: ', '');
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    });
+  });
+</script>

@@ -1,0 +1,190 @@
+---
+import { GET_STARTED } from '../data/site';
+import Icon from './ui/Icon.astro';
+
+const nav = [
+  ['home', 'Home'], ['calendar', 'Calendar'], ['bag', 'Checkout'], ['clients', 'Clients'],
+  ['tag', 'Sales'], ['box', 'Products'], ['more', 'More'],
+];
+const barbers = [
+  { name: 'Zahra', hue: 18 }, { name: 'Charles', hue: 210 }, { name: 'Tyrone', hue: 150 },
+  { name: 'Michael', hue: 280 }, { name: 'Nia', hue: 340 },
+];
+const hours = ['8 AM', '', '9 AM', '', '10 AM', '', '11 AM', '', '12 PM'];
+// col: barber, start: half-hour row from 8:00, len: rows
+const appts = [
+  { col: 0, start: 2, len: 1.5, svc: 'Trim', who: 'Alejandro Ramirez', time: '9:00 – 9:45' },
+  { col: 1, start: 1, len: 2, svc: 'Skin fade', who: 'Jamal Ali', time: '8:30 – 9:30' },
+  { col: 2, start: 0, len: 1, svc: 'Shave', who: 'Luca Rossi', time: '8:00 – 8:30' },
+  { col: 3, start: 3, len: 2, svc: 'Long cut', who: 'Andrei Ivanov', time: '9:30 – 10:30' },
+  { col: 4, start: 2, len: 4, svc: 'Cut + colour', who: 'Emma Svensson', time: '9:00 – 11:00' },
+  { col: 1, start: 4, len: 2, svc: 'Cut + beard', who: 'Omar Haddad', time: '10:00 – 11:00' },
+  { col: 0, start: 5, len: 2, svc: 'Kids cut', who: 'Leo Martin', time: '10:30 – 11:30' },
+  { col: 3, start: 6, len: 1.5, svc: 'Beard trim', who: 'Sam Carter', time: '11:00 – 11:45' },
+];
+---
+
+<section class="hero" id="top">
+  <div class="wrap hero__copy">
+    <a class="badge" href="https://www.barber-os.com/clip-ai-communication"><b>New</b> Clip AI, your 24/7 front desk <Icon name="chevronRight" size={14} /></a>
+    <h1 class="h1">Making Barbering Better For Everyone</h1>
+    <p class="lede">
+      Power your entire business. Booking, payments, staff, stock and an AI front desk in one system, built for barbershops.
+    </p>
+    <div class="hero__ctas">
+      <a class="btn" href={GET_STARTED}>Get Started</a>
+      <a class="btn btn--ghost" href="/pricing">See pricing</a>
+    </div>
+    <p class="small">7-day free trial. Online booking free forever.</p>
+  </div>
+
+  <div class="wrap hero__shot">
+    <div class="app cal" role="img" aria-label="The Barber-OS calendar: a day view with five barbers and their appointments.">
+      <div class="app__bar">
+        <img src="/img/bos-mark-light.png" alt="" class="cal__logo" />
+        <span class="app__icons"><Icon name="chat" /><Icon name="bell" /><Icon name="help" /></span>
+      </div>
+      <div class="cal__body">
+        <aside class="cal__side">
+          {nav.map(([ico, label]) => (
+            <span class:list={['cal__nav', { on: label === 'Calendar' }]}><Icon name={ico} size={18} />{label}</span>
+          ))}
+        </aside>
+        <div class="cal__main">
+          <div class="cal__tools">
+            <span class="cal__today">Today</span>
+            <Icon name="chevronLeft" size={16} /><Icon name="chevronRight" size={16} />
+            <span class="cal__date">Tue, 16 May <Icon name="chevronDown" size={14} /></span>
+            <span class="cal__views"><b>Day</b><span>3 Days</span><span>Week</span></span>
+          </div>
+          <div class="cal__heads">
+            {barbers.map((b, i) => (
+              <div class="cal__head" data-col={i}><span class="av" style={`--h:${b.hue}`}>{b.name[0]}</span>{b.name}</div>
+            ))}
+          </div>
+          <div class="cal__grid">
+            <div class="cal__times">{hours.map((h) => <span>{h}</span>)}</div>
+            <div class="cal__cols">
+              {barbers.map((_, i) => <div class="cal__col" data-col={i}></div>)}
+              <div class="cal__now"><i></i></div>
+              {appts.map((a, i) => (
+                <div class="appt" data-col={a.col} style={`--c:${a.col};--s:${a.start};--l:${a.len};--n:${i}`}>
+                  <small>{a.svc}</small><b>{a.who}</b><span>{a.time}</span>
+                </div>
+              ))}
+              <div class="appt appt--new" data-col="2" style="--c:2;--s:3;--l:2" data-hero-new>
+                <small>Skin fade</small><b>Marcus Bell</b><span>9:30 – 10:30</span><em>NEW</em>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; padding: clamp(56px, 9vw, 112px) 0 clamp(72px, 9vw, 128px); isolation: isolate; }
+  .hero::before {
+    content: ''; position: absolute; left: 50%; top: 42%; z-index: -1; width: min(1400px, 140vw); height: 900px;
+    transform: translateX(-50%); pointer-events: none;
+    background:
+      radial-gradient(closest-side at 30% 55%, rgb(18 109 251 / 0.16), transparent),
+      radial-gradient(closest-side at 72% 45%, rgb(30 187 236 / 0.18), transparent);
+  }
+
+  /* Opening: copy rises in sequence, then the calendar settles and fills. */
+  .hero__copy > * { animation: rise 700ms var(--ease-out) both; }
+  .hero__copy > :nth-child(1) { animation-delay: 40ms; }
+  .hero__copy > :nth-child(2) { animation-delay: 100ms; }
+  .hero__copy > :nth-child(3) { animation-delay: 170ms; }
+  .hero__copy > :nth-child(4) { animation-delay: 230ms; }
+  .hero__copy > :nth-child(5) { animation-delay: 290ms; }
+  .cal { animation: settle 1000ms 320ms var(--ease-out) both; }
+  .appt:not(.appt--new) { animation: pop 420ms var(--ease-out) both; animation-delay: calc(820ms + var(--n, 0) * 45ms); }
+  .cal__now { animation: line 700ms 1100ms var(--ease-out) both; transform-origin: left; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  @keyframes settle { from { opacity: 0; transform: translateY(40px) scale(0.97); } to { opacity: 1; transform: none; } }
+  @keyframes pop { from { opacity: 0; transform: translateY(6px) scale(0.96); } to { opacity: 1; transform: none; } }
+  @keyframes line { from { transform: scaleX(0); } to { transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__copy > *, .cal, .appt:not(.appt--new), .cal__now { animation: fade 300ms ease both; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  }
+  .hero__copy { display: grid; justify-items: center; text-align: center; gap: 22px; }
+  .hero__copy .h1 { margin-top: 6px; max-width: 12em; }
+  .hero__copy .lede { max-width: 34em; }
+  .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+  .hero__shot { margin-top: clamp(48px, 7vw, 88px); }
+
+  .cal { --cols: 5; --row: 46px; box-shadow: var(--shadow-float), 0 0 0 1px rgb(0 0 0 / 0.05); }
+  .cal__logo { height: 18px; width: auto; }
+  .cal__body { display: grid; grid-template-columns: 76px minmax(0, 1fr); }
+  .cal__side { border-right: 1px solid #eceeef; padding: 10px 8px; display: grid; gap: 4px; align-content: start; }
+  .cal__nav { display: grid; justify-items: center; gap: 3px; padding: 8px 2px; border-radius: 8px; font-size: 10.5px; color: #4b5257; }
+  .cal__nav.on { background: var(--app-mint); color: var(--app); font-weight: 600; }
+  .cal__tools { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #eceeef; color: #2a3034; }
+  .cal__today { color: #0b7fae; font-weight: 600; margin-right: 4px; }
+  .cal__date { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; margin-left: 4px; }
+  .cal__views { margin-left: auto; display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: #f2f4f5; }
+  .cal__views > * { padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #4b5257; }
+  .cal__views b { background: var(--app); color: #fff; font-weight: 500; }
+
+  .cal__heads { display: grid; grid-template-columns: repeat(var(--cols), 1fr); margin-left: 56px; border-bottom: 1px solid #eceeef; }
+  .cal__head { display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; font-weight: 600; font-size: 12.5px; }
+  .av {
+    width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    background: hsl(var(--h) 60% 90%); color: hsl(var(--h) 50% 30%); font-size: 11px; font-weight: 700;
+  }
+  .cal__grid { display: grid; grid-template-columns: 56px minmax(0, 1fr); padding-top: 8px; }
+  .cal__times { display: grid; grid-auto-rows: var(--row); }
+  .cal__times span { font-size: 10.5px; color: #8a9196; text-align: right; padding-right: 8px; transform: translateY(-7px); }
+  .cal__cols {
+    position: relative; display: grid; grid-template-columns: repeat(var(--cols), 1fr);
+    height: calc(var(--row) * 9);
+    background-image: linear-gradient(#eceeef 1px, transparent 1px);
+    background-size: 100% calc(var(--row) * 2);
+  }
+  .cal__col { border-left: 1px solid #eceeef; }
+  .cal__now { position: absolute; left: 0; right: 0; top: calc(var(--row) * 4.6); height: 1.5px; background: #e5483a; z-index: 2; }
+  .cal__now i { position: absolute; left: -2px; top: -4px; border-left: 7px solid #e5483a; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+  .appt {
+    position: absolute; z-index: 1;
+    left: calc(100% / var(--cols) * var(--c) + 5px);
+    width: calc(100% / var(--cols) - 10px);
+    top: calc(var(--row) * var(--s) + 3px);
+    height: calc(var(--row) * var(--l) - 6px);
+    background: var(--appt); border-radius: 6px; padding: 6px 8px; overflow: hidden;
+    display: grid; align-content: start; gap: 1px;
+  }
+  .appt small { font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase; color: #3c5a66; }
+  .appt b { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .appt span { font-size: 11px; color: #3c5a66; }
+  .appt em { position: absolute; right: 7px; bottom: 6px; font-style: normal; font-size: 9px; font-weight: 700; }
+  .appt--new { box-shadow: inset 0 0 0 1.5px var(--appt-edge); }
+  .js .appt--new { opacity: 0; transform: translateY(-8px) scale(0.97); filter: blur(4px); transition: opacity 500ms var(--ease-out), transform 600ms var(--ease-out), filter 500ms var(--ease-out); }
+  .js .appt--new.is-in { opacity: 1; transform: none; filter: none; }
+  .appt--new.is-in::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 0 rgb(30 159 208 / 0.5); animation: ping 1200ms 200ms var(--ease-out); }
+  @keyframes ping { to { box-shadow: 0 0 0 10px rgb(30 159 208 / 0); } }
+
+  @media (max-width: 860px) {
+    .cal { --cols: 3; }
+    .cal__side { display: none; }
+    .cal__body { grid-template-columns: 1fr; }
+    .cal__views span { display: none; }
+    [data-col='3'], [data-col='4'] { display: none !important; }
+  }
+  @media (max-width: 520px) {
+    .cal { --row: 40px; }
+    .cal__tools { gap: 6px; padding: 10px 12px; }
+  }
+</style>
+
+<script>
+  // A booking lands on the calendar once the page settles.
+  const el = document.querySelector<HTMLElement>('[data-hero-new]');
+  if (el) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(() => el.classList.add('is-in'), reduce ? 0 : 2200);
+  }
+</script>

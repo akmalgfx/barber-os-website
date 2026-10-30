@@ -1,0 +1,115 @@
+---
+import Icon from './ui/Icon.astro';
+const colors = ['#0a0a0a', '#003242', '#126dfb', '#7a2430', '#c8a24a'];
+---
+
+<article class="feature" id="brand" data-reveal>
+  <div class="feature__copy">
+    <p class="feature__tag">Custom Branded App & Product Store</p>
+    <h2 class="h2">Your Shop. Your App</h2>
+    <p class="lede">Launch your shop's own app on the App Store and Google Play, and sell products straight from your booking link. Barber-OS handles fulfillment.</p>
+    <div class="br__ctrl" data-brand-ctrl>
+      <label class="br__field">
+        <span>Your shop name</span>
+        <input type="text" value="SAINT" maxlength="16" autocomplete="off" spellcheck="false" data-name />
+      </label>
+      <div class="br__sw" role="radiogroup" aria-label="App colour">
+        {colors.map((c, i) => <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} aria-label={`Colour ${c}`} data-c={c} style={`--c:${c}`}></button>)}
+      </div>
+    </div>
+  </div>
+
+  <div class="feature__stage br" data-brand>
+    <div class="br__home" aria-hidden="true">
+      <span class="br__badge">1</span>
+      <span class="br__icon" data-icon>SAINT</span>
+      <span class="br__label" data-label>SAINT</span>
+    </div>
+
+    <div class="br__app app" role="img" aria-label="Preview of your shop's app">
+      <div class="br__head" data-head>
+        <span class="br__mark" data-mark>SAINT</span>
+        <p>Welcome back, Jordan</p>
+      </div>
+      <div class="br__next">
+        <small>Upcoming</small>
+        <b>Tue, 1:30 PM · Fade Cut</b>
+        <span>with Tyrone Anderson</span>
+        <span class="app-btn br__btn" data-btn>Rebook</span>
+      </div>
+      <p class="br__h">Shop products</p>
+      <div class="br__store">
+        <span><img src="/img/products/hanz-claymation.webp" alt="" width="160" height="155" loading="lazy" /><b>Claymation</b><small>$19.99</small></span>
+        <span><img src="/img/products/immortal-tobacco.webp" alt="" width="160" height="155" loading="lazy" /><b>Matte Pomade</b><small>$19.99</small></span>
+        <span><img src="/img/products/agiva-spray.webp" alt="" width="160" height="155" loading="lazy" /><b>Sea Salt Spray</b><small>$19.99</small></span>
+      </div>
+      <p class="br__ship"><Icon name="box" size={13} /> Shipped by Barber-OS</p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .br__ctrl { display: grid; gap: 14px; margin-top: 6px; }
+  .br__field { display: grid; gap: 6px; font-size: 0.875rem; color: var(--ink-3); font-weight: 500; }
+  .br__field input {
+    height: 48px; max-width: 320px; padding: 0 14px; border-radius: 12px; border: 0;
+    background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2);
+    font-size: 1rem; font-weight: 500; color: var(--ink); transition: box-shadow 0.2s;
+  }
+  .br__field input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--blue); }
+  .br__sw { display: flex; gap: 10px; }
+  .br__sw button { width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1); transition: box-shadow 0.2s; }
+  .br__sw button[aria-checked='true'] { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--c); }
+
+  .br { --bc: #0a0a0a; display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; gap: clamp(24px, 4vw, 56px); }
+  .br__home {
+    position: relative; display: grid; justify-items: center; gap: 8px;
+    padding: 26px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #d9f3f6, #a9dde6);
+    box-shadow: 0 0 0 6px #fff, 0 18px 30px -16px rgb(0 0 0 / 0.3);
+  }
+  .br__icon {
+    width: 88px; height: 88px; border-radius: 20px; background: var(--bc); color: #fff;
+    display: grid; place-items: center; padding: 6px; text-align: center;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.24em; line-height: 1.1; word-break: break-word;
+    transition: background-color 0.35s;
+  }
+  .br__label { font-size: 13px; font-weight: 500; color: #fff; text-shadow: 0 1px 2px rgb(0 0 0 / 0.3); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .br__badge { position: absolute; top: 18px; right: 18px; width: 24px; height: 24px; border-radius: 50%; background: #ff3b30; color: #fff; font-size: 13px; font-weight: 600; display: grid; place-items: center; z-index: 1; }
+
+  .br__app { width: 270px; border-radius: 26px; }
+  .br__head { background: var(--bc); color: #fff; padding: 26px 18px 18px; transition: background-color 0.35s; }
+  .br__mark { display: block; font-size: 20px; font-weight: 600; letter-spacing: 0.28em; line-height: 1.15; word-break: break-word; }
+  .br__head p { font-size: 12.5px; opacity: 0.8; margin-top: 6px; }
+  .br__next { margin: 14px; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px #e3e5e7; display: grid; gap: 2px; }
+  .br__next small { color: #6b7176; font-size: 11px; }
+  .br__next b { font-size: 13px; font-weight: 600; }
+  .br__next span { font-size: 12px; color: #4b5257; }
+  .br__btn { justify-self: start; margin-top: 8px; height: 30px; background: var(--bc); color: #fff !important; transition: background-color 0.35s; }
+  .br__h { padding: 4px 14px 8px; font-weight: 600; font-size: 13px; }
+  .br__store { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 14px; }
+  .br__store span { display: grid; gap: 1px; font-size: 11px; }
+  .br__store img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 8px; background: #f6f6f6; margin-bottom: 4px; }
+  .br__store b { font-weight: 500; }
+  .br__store small { color: #6b7176; }
+  .br__ship { display: flex; align-items: center; gap: 6px; padding: 12px 14px 16px; font-size: 11px; color: #6b7176; }
+
+  @media (max-width: 620px) {
+    .br { grid-template-columns: 1fr; justify-items: center; }
+  }
+</style>
+
+<script>
+  const ctrl = document.querySelector<HTMLElement>('[data-brand-ctrl]')!;
+  const stage = document.querySelector<HTMLElement>('[data-brand]')!;
+  const input = ctrl.querySelector<HTMLInputElement>('[data-name]')!;
+  input.addEventListener('input', () => {
+    const n = input.value.trim() || 'Your shop';
+    ['[data-icon]', '[data-label]', '[data-mark]'].forEach((s) => (stage.querySelector(s)!.textContent = n));
+  });
+  ctrl.querySelectorAll<HTMLButtonElement>('[data-c]').forEach((b) =>
+    b.addEventListener('click', () => {
+      ctrl.querySelectorAll('[data-c]').forEach((o) => o.setAttribute('aria-checked', String(o === b)));
+      stage.style.setProperty('--bc', b.dataset.c!);
+    })
+  );
+</script>
