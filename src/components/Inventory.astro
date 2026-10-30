@@ -123,7 +123,7 @@ const labels = ['Home', 'Calendar', 'Checkout', 'Clients', 'Sales', 'Products', 
   const notify = (name: string) => {
     const t = document.createElement('div');
     t.className = 'toast';
-    t.innerHTML = `<img src="/img/bos-mark-light.png" alt=""><b>Barber-OS</b><time>Just now</time><p>Low stock for ${name.replace(/ \d.*$/, '')}.</p>`;
+    t.innerHTML = `<img src="${import.meta.env.BASE_URL.replace(/\/$/, '')}/img/bos-mark-light.png" alt=""><b>Barber-OS</b><time>Just now</time><p>Low stock for ${name.replace(/ \d.*$/, '')}.</p>`;
     toasts.prepend(t);
     while (toasts.children.length > 3) toasts.lastElementChild!.remove();
     // It leaves the way it arrived: back up and out, rather than vanishing.

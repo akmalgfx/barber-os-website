@@ -481,6 +481,8 @@ const why = [
   const empty = document.querySelector<HTMLElement>('[data-empty]')!;
   const totalEl = document.querySelector<HTMLElement>('[data-total]')!;
   const quote = document.querySelector<HTMLAnchorElement>('[data-quote]')!;
+  // Keep the rendered link (it carries the base path on GitHub Pages) and only add the setup to it.
+  const quoteBase = quote.getAttribute('href')!;
   const bar = document.querySelector<HTMLElement>('[data-bar]')!;
   const barCount = document.querySelector<HTMLElement>('[data-bar-count]')!;
   const barTotal = document.querySelector<HTMLElement>('[data-bar-total]')!;
@@ -514,7 +516,7 @@ const why = [
     barCount.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
     barTotal.textContent = money(total);
     quote.setAttribute('aria-disabled', String(count === 0));
-    quote.href = count ? `/contact-us?setup=${encodeURIComponent(`${parts.join(', ')} (${money(total)})`)}` : '/contact-us';
+    quote.href = count ? `${quoteBase}?setup=${encodeURIComponent(`${parts.join(', ')} (${money(total)})`)}` : quoteBase;
     bar.hidden = count === 0 || setupVisible;
     try { localStorage.setItem(KEY, JSON.stringify(qty)); } catch {}
   };
